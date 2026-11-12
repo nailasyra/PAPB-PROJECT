@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -32,7 +33,7 @@ class TransformMemberSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Transform.translate(
       offset: const Offset(0, -25),
-      child: const MemberSection(),
+      child: const MemberPromoSection(),
     );
   }
 }
@@ -55,10 +56,10 @@ class _PhotoCarouselState extends State<PhotoCarousel> {
   Timer? _timer;
 
   final List<String> photos = [
-    'assets/images/1.jpg',
-    'assets/images/2.jpg',
-    'assets/images/3.jpg',
-    'assets/images/4.jpg',
+    'assets/images/backgrounds/bg01.png',
+    'assets/images/backgrounds/bg02.png',
+    'assets/images/backgrounds/bg03.png',
+    'assets/images/backgrounds/bg05.png',
   ];
 
   @override
@@ -153,8 +154,9 @@ class _PhotoCarouselState extends State<PhotoCarousel> {
   }
 }
 
-class MemberSection extends StatelessWidget {
-  const MemberSection({super.key});
+
+class MemberPromoSection extends StatelessWidget {
+  const MemberPromoSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -276,15 +278,21 @@ class MemberSection extends StatelessWidget {
 
           // PROMO CARDS
           Row(
-            children: const [
+            children: [
               Expanded(
-                child: FirstCupCard(),
+                child: _buildPromoCard(
+                  title: 'First Cup',
+                  type: 'first',
+                ),
               ),
 
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
 
               Expanded(
-                child: SuperValueCard(),
+                child: _buildPromoCard(
+                  title: 'Super Value',
+                  type: 'super',
+                ),
               ),
             ],
           ),
@@ -292,19 +300,15 @@ class MemberSection extends StatelessWidget {
       ),
     );
   }
-}
 
-// ==========================================
-// FIRST CUP PROMO
-// ==========================================
+  Widget _buildPromoCard({
+    required String title,
+    required String type,
+  }) {
+    final isFirst = type == 'first';
 
-class FirstCupCard extends StatelessWidget {
-  const FirstCupCard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
     return Container(
-      height: 95,
+      height: 98,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: const Color(0xFFFFF4F2),
@@ -315,48 +319,80 @@ class FirstCupCard extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'First Cup',
-                style: TextStyle(
+              Text(
+                title,
+                style: const TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.w600,
                 ),
               ),
 
-              const SizedBox(height: 3),
+              const SizedBox(height: 5),
 
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    '50%',
-                    style: TextStyle(
-                      fontSize: 29,
-                      height: 1,
-                      fontWeight: FontWeight.w900,
-                      color: Color(0xFFFF512D),
-                    ),
-                  ),
-
-                  const Padding(
-                    padding: EdgeInsets.only(top: 2, left: 2),
-                    child: Text(
-                      'OFF',
+              if (isFirst)
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text(
+                      '50%',
                       style: TextStyle(
-                        fontSize: 9,
+                        fontSize: 29,
+                        height: 1,
+                        fontWeight: FontWeight.w900,
+                        color: Color(0xFFFF512D),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 2, left: 2),
+                      child: Text(
+                        'OFF',
+                        style: TextStyle(
+                          fontSize: 9,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFFF512D),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              else
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Rp',
+                      style: TextStyle(
+                        fontSize: 11,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFFFF512D),
                       ),
                     ),
-                  ),
-                ],
-              ),
+                    const Text(
+                      '1K',
+                      style: TextStyle(
+                        fontSize: 28,
+                        height: 1,
+                        fontWeight: FontWeight.w900,
+                        color: Color(0xFFFF512D),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      '30K',
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: Colors.grey.shade500,
+                        decoration: TextDecoration.lineThrough,
+                      ),
+                    ),
+                  ],
+                ),
 
               const Spacer(),
 
-              const Text(
-                'Order Now  ›',
-                style: TextStyle(
+              Text(
+                isFirst ? 'Order Now  ›' : 'Buy Now  ›',
+                style: const TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
                 ),
@@ -364,106 +400,26 @@ class FirstCupCard extends StatelessWidget {
             ],
           ),
 
-          const Positioned(
+          // PROMO IMAGE
+          Positioned(
             right: 0,
             bottom: 0,
-            child: Icon(
-              Icons.local_cafe,
-              color: Color(0xFFFF512D),
-              size: 38,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ==========================================
-// SUPER VALUE PROMO
-// ==========================================
-
-class SuperValueCard extends StatelessWidget {
-  const SuperValueCard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 95,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFF4F2),
-        borderRadius: BorderRadius.circular(13),
-      ),
-      child: Stack(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Super Value',
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-
-              const SizedBox(height: 7),
-
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Rp',
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFFFF512D),
-                    ),
-                  ),
-
-                  const Text(
-                    '1K',
-                    style: TextStyle(
-                      fontSize: 28,
-                      height: 1,
-                      fontWeight: FontWeight.w900,
-                      color: Color(0xFFFF512D),
-                    ),
-                  ),
-
-                  const SizedBox(width: 4),
-
-                  Text(
-                    '30K',
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: Colors.grey.shade500,
-                      decoration: TextDecoration.lineThrough,
-                    ),
-                  ),
-                ],
-              ),
-
-              const Spacer(),
-
-              const Text(
-                'Buy Now  ›',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-
-          const Positioned(
-            right: 0,
-            bottom: 0,
-            child: Icon(
-              Icons.confirmation_num,
-              color: Color(0xFFFF512D),
-              size: 34,
+            child: Image.asset(
+              isFirst
+                  ? 'assets/images/icon/gelas.png'
+                  : 'assets/images/icon/kupon.png',
+              width: isFirst ? 38 : 40,
+              height: isFirst ? 48 : 40,
+              fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) {
+                return Icon(
+                  isFirst
+                      ? Icons.local_cafe
+                      : Icons.confirmation_num,
+                  color: const Color(0xFFFF512D),
+                  size: 34,
+                );
+              },
             ),
           ),
         ],
@@ -476,41 +432,19 @@ class SuperValueCard extends StatelessWidget {
 class ExploreMore extends StatelessWidget {
   const ExploreMore({super.key});
 
-  final List<Map<String, dynamic>> menus = const [
-    {
-      'title': 'Referral',
-      'icon': Icons.people_outline,
-    },
-    {
-      'title': 'Monthly\nPromo',
-      'icon': Icons.shopping_bag_outlined,
-    },
-    {
-      'title': 'Spin & Win',
-      'icon': Icons.casino_outlined,
-    },
-    {
-      'title': 'Mission',
-      'icon': Icons.assignment_outlined,
-    },
-    {
-      'title': 'Voucher',
-      'icon': Icons.confirmation_number_outlined,
-    },
-    {
-      'title': 'Rewards',
-      'icon': Icons.card_giftcard_outlined,
-    },
+  final List<Map<String, String>> menus = const [
+    {'title': 'Pick Up', 'icon': 'assets/images/icon/pick up.png'},
+    {'title': 'Delivery', 'icon': 'assets/images/icon/delivery.png'},
+    {'title': 'Referral', 'icon': 'assets/images/icon/referral.png'},
+    {'title': 'Monthly\nPromo', 'icon': 'assets/images/icon/monthly promo.png'},
+    {'title': 'Spin & Win', 'icon': 'assets/images/icon/spin & win.png'},
+    {'title': 'Mission', 'icon': 'assets/images/icon/mission.png'},
   ];
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(
-        left: 14,
-        top: 5,
-        bottom: 15,
-      ),
+      padding: const EdgeInsets.only(left: 14, top: 5, bottom: 15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -530,8 +464,7 @@ class ExploreMore extends StatelessWidget {
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: menus.length,
-              separatorBuilder: (context, index) =>
-                  const SizedBox(width: 5),
+              separatorBuilder: (context, index) => const SizedBox(width: 5),
               itemBuilder: (context, index) {
                 final menu = menus[index];
 
@@ -543,20 +476,34 @@ class ExploreMore extends StatelessWidget {
                         width: 54,
                         height: 54,
                         decoration: const BoxDecoration(
-                          color: Color.fromARGB(239, 235, 230, 230),
+                          gradient: LinearGradient(
+                            colors: [
+                              Color.fromARGB(209, 234, 234, 234),
+                              Color.fromARGB(255, 250, 250, 250),
+                            ],
+                            begin: Alignment.topRight,
+                            end: Alignment.bottomLeft,
+                          ),
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(
-                          menu['icon'],
-                          size: 32,
-                          color: const Color(0xFF444444),
+                        child: Image.asset(
+                          menu['icon']!,
+                          width: 54,
+                          height: 54,
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Icon(
+                              Icons.image_not_supported,
+                              color: Colors.grey,
+                            );
+                          },
                         ),
                       ),
 
                       const SizedBox(height: 7),
 
                       Text(
-                        menu['title'],
+                        menu['title']!,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontSize: 11,
@@ -575,4 +522,3 @@ class ExploreMore extends StatelessWidget {
     );
   }
 }
-
