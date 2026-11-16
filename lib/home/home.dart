@@ -18,6 +18,10 @@ class HomePage extends StatelessWidget {
               PromoCarousel(),
               TransformMemberSection(),
               ExploreMore(),
+              LimitedOffersSection(),
+              ForYouSection(),
+              MissionSection(),
+              TomoroHighlightSection(),
             ],
           ),
         ),
@@ -1091,6 +1095,588 @@ class MonthlyGiftContent extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+}
+
+
+// ==========================================
+// BAGIAN LANJUTAN HOME: LIMITED OFFERS
+// ==========================================
+
+class LimitedOffersSection extends StatelessWidget {
+  const LimitedOffersSection({super.key});
+
+  static const List<Map<String, String>> offers = [
+    {
+      'image': 'assets/images/home/limited_friday_cup.jpg',
+      'title': 'FRIDAY DEAL',
+      'price': '22',
+      'oldPrice': '24',
+    },
+    {
+      'image': 'assets/images/home/limited_matcha_eclair.jpg',
+      'title': 'MATCHA ÉCLAIR',
+      'price': '20',
+      'oldPrice': '22',
+    },
+    {
+      'image': 'assets/images/home/limited_matcha_bagel.jpg',
+      'title': 'MATCHA RASPBERRY BAGEL',
+      'price': '22',
+      'oldPrice': '24',
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 14, top: 10, bottom: 18),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Text(
+                'Limited Offers',
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF222222),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFEEEE),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Row(
+                  children: [
+                    Icon(
+                      Icons.access_time_filled,
+                      size: 12,
+                      color: Color(0xFFFF5428),
+                    ),
+                    SizedBox(width: 4),
+                    Text(
+                      '18 : 43 : 56',
+                      style: TextStyle(
+                        color: Color(0xFFFF5428),
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            height: 128,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: offers.length + 1,
+              separatorBuilder: (context, index) =>
+                  const SizedBox(width: 9),
+              itemBuilder: (context, index) {
+                if (index == offers.length) {
+                  return Container(
+                    width: 88,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 25,
+                          color: Color(0xFF999999),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          'See All',
+                          style: TextStyle(
+                            color: Color(0xFF555555),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                final offer = offers[index];
+
+                return _LimitedOfferCard(
+                  image: offer['image']!,
+                  title: offer['title']!,
+                  price: offer['price']!,
+                  oldPrice: offer['oldPrice']!,
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LimitedOfferCard extends StatelessWidget {
+  const _LimitedOfferCard({
+    required this.image,
+    required this.title,
+    required this.price,
+    required this.oldPrice,
+  });
+
+  final String image;
+  final String title;
+  final String price;
+  final String oldPrice;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 230,
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFFCFC),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.035),
+            blurRadius: 7,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 5,
+              ),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 66,
+                    height: 68,
+                    child: Image.asset(
+                      image,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(
+                          Icons.image_not_supported_outlined,
+                          color: Colors.grey,
+                          size: 28,
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 9),
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1.1,
+                        color: Color(0xFF252525),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Container(
+            height: 43,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: const BoxDecoration(
+              color: Color(0xFFFF5428),
+            ),
+            child: Row(
+              children: [
+                const Text(
+                  'Rp ',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 8,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  '${price}K',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 19,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(width: 5),
+                Text(
+                  '${oldPrice}K',
+                  style: const TextStyle(
+                    color: Color(0xFFFFD2C7),
+                    fontSize: 9,
+                    decoration: TextDecoration.lineThrough,
+                  ),
+                ),
+                const Spacer(),
+                InkWell(
+                  borderRadius: BorderRadius.circular(18),
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Fitur pembelian belum dihubungkan.'),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 13,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                    child: const Text(
+                      'BUY',
+                      style: TextStyle(
+                        color: Color(0xFFFF5428),
+                        fontSize: 9,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ==========================================
+// BAGIAN LANJUTAN HOME: FOR YOU
+// ==========================================
+
+class ForYouSection extends StatelessWidget {
+  const ForYouSection({super.key});
+
+  static const List<Map<String, String>> products = [
+    {
+      'image': 'assets/images/home/foryou_americano.jpg',
+      'name': 'Master S.O.E\n- Americano',
+      'price': 'Rp 30.000',
+    },
+    {
+      'image': 'assets/images/home/foryou_latte.jpg',
+      'name': 'Master S.O.E\n- Latte',
+      'price': 'Rp 32.000',
+    },
+    {
+      'image': 'assets/images/home/foryou_breve_latte.jpg',
+      'name': 'Master S.O.E\n- Breve Latte',
+      'price': 'Rp 37.000',
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 14, top: 3, bottom: 18),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'For You',
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF222222),
+            ),
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            height: 235,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: products.length,
+              separatorBuilder: (context, index) =>
+                  const SizedBox(width: 13),
+              itemBuilder: (context, index) {
+                final product = products[index];
+
+                return Container(
+                  width: 140,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFFDFF),
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.025),
+                        blurRadius: 5,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 140,
+                        height: 132,
+                        child: Image.asset(
+                          product['image']!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const ColoredBox(
+                              color: Color(0xFFECECEC),
+                              child: Center(
+                                child: Icon(
+                                  Icons.local_cafe_outlined,
+                                  color: Colors.grey,
+                                  size: 35,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(11, 8, 8, 0),
+                        child: Text(
+                          product['name']!,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            height: 1.25,
+                            color: Color(0xFF292929),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(11, 0, 8, 12),
+                        child: Text(
+                          product['price']!,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Color(0xFF222222),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ==========================================
+// BAGIAN LANJUTAN HOME: MISSION
+// ==========================================
+
+class MissionSection extends StatelessWidget {
+  const MissionSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(14, 5, 14, 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Mission',
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF222222),
+            ),
+          ),
+          const SizedBox(height: 13),
+          Row(
+            children: [
+              Image.asset(
+                'assets/images/home/mission_50_points.jpg',
+                width: 55,
+                height: 58,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) {
+                  return const SizedBox(
+                    width: 55,
+                    height: 58,
+                    child: Icon(
+                      Icons.workspace_premium_rounded,
+                      color: Color(0xFFFF8A00),
+                      size: 42,
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Complete personal information...',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF292929),
+                      ),
+                    ),
+                    const SizedBox(height: 9),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: const LinearProgressIndicator(
+                        value: 2 / 3,
+                        minHeight: 5,
+                        backgroundColor: Color(0xFFECECEC),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Color(0xFFFF8A00),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    const Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        '2/3',
+                        style: TextStyle(
+                          color: Color(0xFFFF8A00),
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              OutlinedButton(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Halaman Mission belum dihubungkan.'),
+                    ),
+                  );
+                },
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: const Color(0xFFFF5428),
+                  side: const BorderSide(
+                    color: Color(0xFFFF5428),
+                    width: 1.2,
+                  ),
+                  minimumSize: const Size(52, 32),
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(22),
+                  ),
+                ),
+                child: const Text(
+                  'GO',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ==========================================
+// BAGIAN LANJUTAN HOME: TOMORO HIGHLIGHT
+// ==========================================
+
+class TomoroHighlightSection extends StatelessWidget {
+  const TomoroHighlightSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(14, 2, 14, 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'TOMORO Highlight',
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF222222),
+            ),
+          ),
+          const SizedBox(height: 13),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(11),
+            child: Image.asset(
+              'assets/images/home/tomoro_highlight_mont_blanc.jpg',
+              width: double.infinity,
+              fit: BoxFit.fitWidth,
+              errorBuilder: (context, error, stackTrace) {
+                return const SizedBox(
+                  height: 180,
+                  child: Center(
+                    child: Text('Gambar TOMORO Highlight tidak ditemukan'),
+                  ),
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 14),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(11),
+            child: Image.asset(
+              'assets/images/home/tomoro_highlight_about.jpg',
+              width: double.infinity,
+              fit: BoxFit.fitWidth,
+              errorBuilder: (context, error, stackTrace) {
+                return const SizedBox(
+                  height: 180,
+                  child: Center(
+                    child: Text('Gambar TOMORO Highlight tidak ditemukan'),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
