@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 // ======================================================
 // MENU DATA
@@ -33,7 +34,7 @@ const List<Map<String, dynamic>> menuData = [
     'category': 'MONTHLY PROMO',
     'label': 'MONTHLY\nPROMO',
     'badge': '',
-    'logo': 'assets/images/icon/monthly_promo.svg',
+    'logo': 'assets/images/icon/promo.svg',
     'icon': null,
     'type': 'banner',
     'products': [],
@@ -61,8 +62,8 @@ const List<Map<String, dynamic>> menuData = [
     'category': 'TRIPLE PISTACHIO SERIES',
     'label': 'TRIPLE\nPISTACHIO\nSERIES',
     'badge': '',
-    'logo': 'assets/images/icon/triple_pistachio.svg',
-    'banner': 'assets/images/banners/triple_pistachio_banner.png',
+    'logo': 'assets/images/icon/pistacio.svg',
+    'banner': 'assets/images/backgrounds/glowInTheDark.jpeg',
     'icon': null,
     'products': [
       {
@@ -86,13 +87,23 @@ const List<Map<String, dynamic>> menuData = [
     'category': 'TOMORO SIGNATURE',
     'label': 'TOMORO\nSIGNATURE',
     'badge': '',
-    'logo': '',
+    'logo': 'assets/images/icon/member.svg',
     'icon': null,
     'products': [
       {
-        'name': 'Tomoro Signature',
-        'price': 'Rp 25.000',
-        'image': '',
+        'name': 'Tomoro Aren Latte',
+        'price': 'Rp 21.000',
+        'image': 'https://huawei-food-cms.grab.com/compressed_webp/items/url-a234ab61/photo/699b5c0f99ba7085.webp',
+      },
+      {
+        'name': 'Matcha Latte',
+        'price': 'Rp 21.000',
+        'image': 'https://huawei-food-cms.grab.com/compressed_webp/items/url-328113ae/photo/4364d930caa5d444.webp',
+      },
+      {
+        'name': 'Caffe Latte',
+        'price': 'Rp 24.000',
+        'image': 'https://huawei-food-cms.grab.com/compressed_webp/items/url-3d1210d7/photo/4792dc90d0bd522f.webp',
       },
     ],
   },
@@ -100,13 +111,23 @@ const List<Map<String, dynamic>> menuData = [
     'category': 'BLACK COFFEE',
     'label': 'BLACK\nCOFFEE',
     'badge': '',
-    'logo': '',
+    'logo': 'assets/images/icon/coffee.svg',
     'icon': null,
     'products': [
       {
-        'name': 'Americano',
+        'name': 'Caffe Americano',
         'price': 'Rp 18.000',
-        'image': '',
+        'image': 'https://huawei-food-cms.grab.com/compressed_webp/items/url-9ec00439/photo/1d6fbb071c0fc64e.webp',
+      },
+      {
+        'name': 'Strawberry Americano',
+        'price': 'Rp 19.000',
+        'image': 'https://huawei-food-cms.grab.com/compressed_webp/items/url-08b8b88b/photo/861a8ea082240786.webp',
+      },
+      {
+        'name': 'Peach Americano',
+        'price': 'Rp 19.000',
+        'image': 'https://huawei-food-cms.grab.com/compressed_webp/items/url-9623e905/photo/f5c586abd72e9f8a.webp',
       },
     ],
   },
@@ -114,13 +135,23 @@ const List<Map<String, dynamic>> menuData = [
     'category': 'MILK BASED COFFEE',
     'label': 'MILK\nBASED\nCOFFEE',
     'badge': '',
-    'logo': '',
+    'logo': 'assets/images/icon/milk.svg',
     'icon': null,
     'products': [
       {
-        'name': 'Cafe Latte',
+        'name': 'TOMORO Oat Latte',
         'price': 'Rp 23.000',
-        'image': '',
+        'image': 'https://huawei-food-cms.grab.com/compressed_webp/items/url-a3af3383/photo/9a2e27619d12a401.webp',
+      },
+      {
+        'name': 'Caramel Macchiato salted Cloud',
+        'price': 'Rp 29.000',
+        'image': 'https://huawei-food-cms.grab.com/compressed_webp/items/url-00d22335/photo/48a12e4cd2598cf4.webp',
+      },
+      {
+        'name': 'Caramel Cheese Latte',
+        'price': 'Rp 23.000',
+        'image': 'https://huawei-food-cms.grab.com/compressed_webp/items/url-2b06a683/photo/f7bc4e2c88b552c2.webp',
       },
     ],
   },
@@ -129,12 +160,60 @@ const List<Map<String, dynamic>> menuData = [
     'label': 'FLAVO\nURED\nDRINKS',
     'badge': '',
     'logo': '',
-    'icon': null,
+    'icon': Icons.coffee_outlined,
     'products': [
       {
-        'name': 'Chocolate Drink',
-        'price': 'Rp 22.000',
-        'image': '',
+        'name': 'Matcha Oat Latte',
+        'price': 'Rp 30.000',
+        'image': 'https://huawei-food-cms.grab.com/compressed_webp/items/url-6f727fb3/photo/e5dd2c47ecf867c1.webp',
+      },
+      {
+        'name': 'Matcha Salted Cloud',
+        'price': 'Rp 30.000',
+        'image': 'https://huawei-food-cms.grab.com/compressed_webp/items/url-77c25ee8/photo/8136b37d518923e3.webp',
+      },
+      {
+        'name': 'Chocolate Salted Cloud',
+        'price': 'Rp 30.000',
+        'image': 'https://huawei-food-cms.grab.com/compressed_webp/items/url-edad60e5/photo/cb60faa70757123.webp',
+      },
+    ],
+  },
+  {
+    'category': 'TEA SERIES',
+    'label': 'TEA\nSERIES',
+    'badge': '',
+    'logo': '',
+    'icon': Icons.local_drink_outlined,
+    'products': [
+      {
+        'name': 'Peach Jasmine Tea',
+        'price': 'Rp 19.000',
+        'image': 'https://huawei-food-cms.grab.com/compressed_webp/items/url-b6338744/photo/bc0c11764a3c2bbc.webp',
+      },
+      {
+        'name': 'Strawberry Jasmine Tea',
+        'price': 'Rp 19.000',
+        'image': 'https://huawei-food-cms.grab.com/compressed_webp/items/url-172a6ccb/photo/c885419417e57c52.webp',
+      },
+      {
+        'name': 'Chocolate Salted Cloud',
+        'price': 'Rp 19.000',
+        'image': 'https://huawei-food-cms.grab.com/compressed_webp/items/url-681d16fb/photo/59876fae968f956e.webp',
+      },
+    ],
+  },
+  {
+    'category': 'FRAPE',
+    'label': 'FRAPE',
+    'badge': '',
+    'logo': '',
+    'icon': Icons.local_cafe_outlined,
+    'products': [
+      {
+        'name': 'Chocolate Frape',
+        'price': 'Rp 19.000',
+        'image': 'https://huawei-food-cms.grab.com/compressed_webp/items/url-200a7a10/photo/cc6d18c2fef724a.webp',
       },
     ],
   },
@@ -240,67 +319,76 @@ class _MenuPageState extends State<MenuPage> {
   }
 
   @override
+ 
+  @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Column(
-        children: [
-          const MenuHeader(),
-          Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // SIDEBAR KIRI
-                SizedBox(
-                  width: 84,
-                  child: CategorySidebar(
-                    categories: menuData,
-                    selectedIndex: selectedCategory,
-                    onCategoryTap: _selectCategory,
-                  ),
-                ),
-
-                // KONTEN KANAN
-                Expanded(
-                  child: SingleChildScrollView(
-                    key: _contentKey,
-                    controller: _scrollController,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // BANNER CAROUSEL
-                        const BannerCarousel(),
-
-                        // SELURUH KATEGORI PRODUK
-                        ...List.generate(
-                          menuData.length,
-                          (index) {
-                            final category = menuData[index];
-
-                            final products =
-                                (category['products'] as List)
-                                    .map(
-                                      (item) =>
-                                          Map<String, String>.from(item),
-                                    )
-                                    .toList();
-
-                            return CategorySection(
-                              key: sectionKeys[index],
-                              title: category['category'],
-                              products: products,
-                              onProductTap: widget.onProductTap,
-                              isBanner: category['category'] == 'MONTHLY PROMO',
-                            );
-                          },
-                        ),
-                      ],
+    return DefaultTextStyle.merge(
+      style: GoogleFonts.lexend(),
+      child: SafeArea(
+        child: Container(
+          color: const Color.fromARGB(255, 255, 255, 255),
+          child: Column(
+            children: [
+              const MenuHeader(),
+              Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // SIDEBAR KIRI
+                    SizedBox(
+                      width: 84,
+                      child: CategorySidebar(
+                        categories: menuData,
+                        selectedIndex: selectedCategory,
+                        onCategoryTap: _selectCategory,
+                      ),
                     ),
-                  ),
+
+                    // KONTEN KANAN
+                    Expanded(
+                      child: SingleChildScrollView(
+                        key: _contentKey,
+                        controller: _scrollController,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // BANNER CAROUSEL
+                            const BannerCarousel(),
+
+                            // SELURUH KATEGORI PRODUK
+                            ...List.generate(
+                              menuData.length,
+                              (index) {
+                                final category = menuData[index];
+
+                                final products =
+                                    (category['products'] as List)
+                                        .map(
+                                          (item) =>
+                                              Map<String, String>.from(item),
+                                        )
+                                        .toList();
+
+                                return CategorySection(
+                                  key: sectionKeys[index],
+                                  title: category['category'],
+                                  products: products,
+                                  onProductTap: widget.onProductTap,
+                                  isBanner:
+                                      category['category'] == 'MONTHLY PROMO',
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -541,8 +629,6 @@ class _BannerCarouselState extends State<BannerCarousel> {
   }
 }
 
-
-
 // ======================================================
 // SIDEBAR KATEGORI
 // ======================================================
@@ -644,6 +730,12 @@ class CategorySidebar extends StatelessWidget {
                           width: 30,
                           height: 25,
                           fit: BoxFit.contain,
+                          colorFilter: category['category'] == 'TOMORO SIGNATURE'
+                              ? const ColorFilter.mode(
+                                  Color.fromARGB(255, 255, 184, 103),
+                                  BlendMode.srcIn,
+                                )
+                              : null,
                         ),
                       )
 
@@ -657,8 +749,8 @@ class CategorySidebar extends StatelessWidget {
                         ),
                         child: SvgPicture.asset(
                           icon,
-                          width: 28,
-                          height: 28,
+                          width: 25,
+                          height: 25,
                           fit: BoxFit.contain,
                         ),
                       )
@@ -671,7 +763,7 @@ class CategorySidebar extends StatelessWidget {
                         ),
                         child: Icon(
                           icon,
-                          size: 32,
+                          size: 25,
                           color: const Color(0xFFD99A43),
                         ),
                       ),
@@ -836,12 +928,18 @@ class ProductCard extends StatelessWidget {
             ),
 
             // TOMBOL PLUS VISUAL SAJA
-            const Padding(
-              padding: EdgeInsets.only(left: 5),
-              child: Icon(
-                Icons.add_circle,
-                size: 43,
-                color: Color(0xFFFFA500),
+            SizedBox(
+              height: 125,
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: const Padding(
+                  padding: EdgeInsets.only(left: 5, bottom: 15),
+                  child: Icon(
+                    Icons.add_circle,
+                    size: 27,
+                    color: Color(0xFFFFA500),
+                  ),
+                ),
               ),
             ),
           ],
