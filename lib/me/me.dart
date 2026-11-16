@@ -1,31 +1,171 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 class MePage extends StatelessWidget {
-  const MePage({super.key});
+  const MePage({
+    super.key,
+    this.name = 'caca',
+    this.level = 1,
+    this.vouchers = 2,
+    this.points = 0,
+    this.mascotAsset = 'assets/images/icon/me icon 1.png',
+  });
 
-  // Warna (lokal di file ini)
+  final String name;
+  final int level;
+  final int vouchers;
+  final int points;
+  final String mascotAsset;
+
+  // Warna Lokal
   static const Color _orange = Color(0xFFFF5A1F);
   static const Color _peach = Color(0xFFFFE3DA);
   static const Color _bg = Color(0xFFF8F8F8);
   static const Color _text = Color(0xFF222222);
   static const Color _grey = Color(0xFF9A9A9A);
 
-  // Daftar menu
-  static const List<_MenuData> _menus = [
-    _MenuData(Icons.receipt_long_outlined, 'Order History'),
-    _MenuData(Icons.location_on_outlined, 'My Addresses'),
-    _MenuData(Icons.swap_horizontal_circle_outlined, 'Redeem Center'),
-    _MenuData(Icons.help_outline_rounded, 'Help Center'),
-    _MenuData(Icons.language_rounded, 'Language'),
-    _MenuData(Icons.menu_book_outlined, 'Terms of Services'),
-    _MenuData(Icons.lock_outline_rounded, 'Privacy Policy'),
-    _MenuData(Icons.chat_outlined, 'Customer Care'),
-    _MenuData(Icons.settings_outlined, 'Settings'),
+  // Skala Tampilan
+  static const double _k = 0.90;
+
+  // Daftar Menu
+  static final List<MenuData> _menus = [
+    MenuData(_ic(Icons.article_outlined), 'Order History'),
+    MenuData(_ic(Icons.location_on_outlined), 'My Addresses'),
+    MenuData(_ic(Icons.swap_horizontal_circle_outlined), 'Redeem Center'),
+    MenuData(_ic(Icons.help_outline_rounded), 'Help Center'),
+    MenuData(_ic(Icons.language_rounded), 'Language'),
+    MenuData(_ic(Icons.book_outlined), 'Terms of Services'),
+    MenuData(_privacyIcon(), 'Privacy Policy'),
+    MenuData(_whatsIcon(), 'Customer Care'),
+    MenuData(_ic(Icons.settings_outlined), 'Settings'),
   ];
+
+  static Widget _ic(IconData d) => Icon(d, color: _text, size: 24);
+
+  // Ikon "Privacy Policy"
+  static Widget _privacyIcon() {
+    return SizedBox(
+      width: 24,
+      height: 24,
+      child: Stack(
+        children: [
+          Container(
+            width: 20,
+            height: 22,
+            decoration: BoxDecoration(
+              border: Border.all(color: _text, width: 2),
+              borderRadius: BorderRadius.circular(5),
+            ),
+          ),
+          Positioned(
+            right: 0,
+            bottom: 0,
+            child: Container(
+              color: Colors.white,
+              padding: const EdgeInsets.only(left: 1, top: 1),
+              child: const Icon(
+                Icons.lock_outline_rounded,
+                color: _text,
+                size: 14,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Ikon "Customer Care" (gelembung WhatsApp, ujung lancip di kiri bawah)
+  static Widget _whatsIcon() {
+    return SizedBox(
+      width: 24,
+      height: 24,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          CustomPaint(
+            size: const Size(24, 24),
+            painter: _WaBubblePainter(_text),
+          ),
+          const Icon(Icons.phone_rounded, color: _text, size: 12),
+        ],
+      ),
+    );
+  }
+
+  // Ikon QR (4 kotak)
+  static Widget _qrIcon({double size = 26}) {
+    final c = size * 0.42;
+    Widget box() => Container(
+          width: c,
+          height: c,
+          decoration: BoxDecoration(
+            border: Border.all(color: _orange, width: 2),
+            borderRadius: BorderRadius.circular(4),
+          ),
+        );
+    Widget bar() => Container(
+          width: 2.5,
+          height: c,
+          decoration: BoxDecoration(
+            color: _orange,
+            borderRadius: BorderRadius.circular(2),
+          ),
+        );
+    return SizedBox(
+      width: size,
+      height: size,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [box(), box()],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              box(),
+              SizedBox(
+                width: c,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [bar(), bar()],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Ikon Poin
+  static Widget _coinIcon({double size = 26}) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: _orange, width: 2),
+      ),
+      child: Center(
+        child: Container(
+          width: size * 0.42,
+          height: size * 0.42,
+          decoration: BoxDecoration(
+            border: Border.all(color: _orange, width: 2),
+            borderRadius: BorderRadius.circular(3),
+          ),
+        ),
+      ),
+    );
+  }
 
   void _open(BuildContext context, String title) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => _SimplePage(title: title)),
+      MaterialPageRoute(builder: (_) => SimplePage(title: title)),
     );
   }
 
@@ -35,39 +175,55 @@ class MePage extends StatelessWidget {
       backgroundColor: _bg,
       body: Stack(
         children: [
-          // Latar peach
+          // Latar Peach
           Container(
-            height: 300,
+            height: 470 * _k,
             decoration: const BoxDecoration(
               color: _peach,
-              borderRadius: BorderRadius.vertical(bottom: Radius.circular(40)),
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(60)),
             ),
           ),
           Positioned(
-            right: -30,
-            top: -20,
-            child: _circle(130, Colors.white.withOpacity(0.35)),
+            right: -25,
+            top: 40,
+            child: _circle(100, const Color.fromARGB(255, 250, 202, 187).withOpacity(0.35)),
           ),
           Positioned(
-            right: 40,
-            top: 70,
-            child: _circle(90, Colors.white.withOpacity(0.25)),
+            right: -25,
+            top: 125,
+            child: _circle(100, const Color.fromARGB(255, 250, 202, 187).withOpacity(0.35)),
+          ),
+          Positioned(
+            right: 55,
+            top: 110,
+            child: _circle(90, const Color.fromARGB(255, 250, 202, 187).withOpacity(0.35)),
           ),
           SafeArea(
             bottom: false,
             child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(20, 24, 20, 40),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _header(),
-                  const SizedBox(height: 18),
-                  _statsCard(),
-                  const SizedBox(height: 14),
-                  _promoBanner(),
-                  const SizedBox(height: 14),
-                  _menuCard(context),
-                ],
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 40),
+              child: LayoutBuilder(
+                builder: (context, c) {
+                  final vw = c.maxWidth / _k;
+                  return FittedBox(
+                    fit: BoxFit.fitWidth,
+                    alignment: Alignment.topCenter,
+                    child: SizedBox(
+                      width: vw,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildHeader(vw),
+                          _buildStatsCard(),
+                          const SizedBox(height: 12),
+                          _buildPromoBanner(),
+                          const SizedBox(height: 12),
+                          _buildMenuCard(context),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
           ),
@@ -76,63 +232,73 @@ class MePage extends StatelessWidget {
     );
   }
 
-  /* ------------------------------ HEADER ------------------------------ */
+  // ------------------------------ HEADER ------------------------------ //
 
-  Widget _header() {
+  Widget _buildHeader(double width) {
     return SizedBox(
       width: double.infinity,
-      height: 120,
+      height: 266,
       child: Stack(
+        clipBehavior: Clip.none,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Hi! Friends',
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w800,
-                  color: _text,
-                ),
-              ),
-              const SizedBox(height: 12),
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _orange,
-                  foregroundColor: Colors.white,
-                  elevation: 0,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: const Text(
-                  'Login',
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
-                ),
-              ),
-            ],
-          ),
-          // Placeholder gelas (ganti dengan Image.asset kalau ada)
+          // Avatar
           Positioned(
-            right: 24,
-            top: 0,
+            left: 20,
+            top: 130,
             child: Container(
               width: 80,
-              height: 95,
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.5),
-                border: Border.all(color: _orange.withOpacity(0.6), width: 2),
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(18),
-                  bottomRight: Radius.circular(18),
-                  topLeft: Radius.circular(4),
-                  topRight: Radius.circular(4),
+              height: 80,
+              decoration: const BoxDecoration(
+              ),
+              child: ClipOval(
+                child: Image.asset(
+                  'assets/images/icon/me icon 2.png',
+                  fit: BoxFit.cover,
                 ),
               ),
-              child: const Icon(Icons.coffee_rounded, color: _orange, size: 38),
+            ),
+          ),
+          // Nama
+          Positioned(
+            left: 101,
+            top: 138,
+            child: Text(
+              name,
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w700,
+                color: _text,
+              ),
+            ),
+          ),
+          // Badge Level
+          Positioned(
+            left: 101,
+            top: 174,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+              decoration: BoxDecoration(
+                color: const Color(0xFF9C8C7C),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                'Lv.$level',
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          // Maskot
+          Positioned(
+            right: 6,
+            bottom: -4,
+            child: Image.asset(
+              mascotAsset,
+              width: width * 0.32,
+              fit: BoxFit.contain,
             ),
           ),
         ],
@@ -140,36 +306,46 @@ class MePage extends StatelessWidget {
     );
   }
 
-  /* ---------------------------- STATS CARD ---------------------------- */
+  // ---------------------------- STATS CARD ---------------------------- //
 
-  Widget _statsCard() {
+  Widget _buildStatsCard() {
     return _whiteCard(
-      padding: const EdgeInsets.fromLTRB(20, 20, 16, 8),
+      padding: const EdgeInsets.fromLTRB(18, 16, 14, 4),
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _stat('Vouchers', Icons.confirmation_number_outlined, value: '-'),
-              _stat('Points', Icons.stars_outlined, value: '-', suffix: ' pts'),
-              _stat('QR Code', Icons.qr_code_2_rounded),
+              _buildStatItem(
+                'Vouchers',
+                const Icon(Icons.confirmation_number_outlined,
+                    color: _orange, size: 26),
+                value: '$vouchers',
+              ),
+              _buildStatItem(
+                'TOMORO Points',
+                _coinIcon(),
+                value: '$points',
+                suffix: ' pts',
+              ),
+              _buildStatItem('QR Code', _qrIcon()),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           const Divider(height: 1, color: Color(0xFFEFEFEF)),
           InkWell(
             onTap: () {},
             child: const Padding(
-              padding: EdgeInsets.symmetric(vertical: 16),
+              padding: EdgeInsets.symmetric(vertical: 14),
               child: Row(
                 children: [
                   Text('Achievement',
-                      style: TextStyle(fontSize: 15, color: _text)),
+                      style: TextStyle(fontSize: 14, color: _text)),
                   Spacer(),
                   Text('Collect your medals!',
-                      style: TextStyle(fontSize: 14, color: _grey)),
+                      style: TextStyle(fontSize: 13, color: _grey)),
                   SizedBox(width: 6),
-                  Icon(Icons.chevron_right_rounded, color: _grey, size: 22),
+                  Icon(Icons.chevron_right_rounded, color: _grey, size: 20),
                 ],
               ),
             ),
@@ -179,7 +355,12 @@ class MePage extends StatelessWidget {
     );
   }
 
-  Widget _stat(String title, IconData icon, {String? value, String? suffix}) {
+  Widget _buildStatItem(
+    String title,
+    Widget icon, {
+    String? value,
+    String? suffix,
+  }) {
     return SizedBox(
       width: 100,
       child: Column(
@@ -187,30 +368,32 @@ class MePage extends StatelessWidget {
           Text(
             title,
             style: const TextStyle(
-              fontSize: 15,
+              fontSize: 14,
               fontWeight: FontWeight.w700,
               color: _text,
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: _orange, size: 28),
+              icon,
               if (value != null) ...[
                 const SizedBox(width: 6),
                 Text(
                   value,
                   style: const TextStyle(
-                    fontSize: 18,
+                    fontSize: 17,
                     fontWeight: FontWeight.w800,
                     color: _text,
                   ),
                 ),
               ],
               if (suffix != null)
-                Text(suffix,
-                    style: const TextStyle(fontSize: 13, color: _grey)),
+                Text(
+                  suffix,
+                  style: const TextStyle(fontSize: 13, color: _grey),
+                ),
             ],
           ),
         ],
@@ -218,9 +401,9 @@ class MePage extends StatelessWidget {
     );
   }
 
-  /* --------------------------- PROMO BANNER --------------------------- */
+  // --------------------------- PROMO BANNER --------------------------- //
 
-  Widget _promoBanner() {
+  Widget _buildPromoBanner() {
     return ClipRRect(
       borderRadius: BorderRadius.circular(18),
       child: Image.asset(
@@ -231,9 +414,9 @@ class MePage extends StatelessWidget {
     );
   }
 
-  /* ---------------------------- MENU LIST ----------------------------- */
+  // ---------------------------- MENU LIST ----------------------------- //
 
-  Widget _menuCard(BuildContext context) {
+  Widget _buildMenuCard(BuildContext context) {
     return _whiteCard(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Column(
@@ -243,19 +426,22 @@ class MePage extends StatelessWidget {
               onTap: () => _open(context, m.title),
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                    const EdgeInsets.symmetric(horizontal: 18, vertical: 13),
                 child: Row(
                   children: [
-                    Icon(m.icon, color: _text, size: 26),
-                    const SizedBox(width: 16),
+                    m.icon,
+                    const SizedBox(width: 14),
                     Expanded(
                       child: Text(
                         m.title,
-                        style: const TextStyle(fontSize: 17, color: _text),
+                        style: const TextStyle(fontSize: 16, color: _text),
                       ),
                     ),
-                    const Icon(Icons.chevron_right_rounded,
-                        color: _grey, size: 22),
+                    const Icon(
+                      Icons.chevron_right_rounded,
+                      color: _grey,
+                      size: 20,
+                    ),
                   ],
                 ),
               ),
@@ -265,9 +451,12 @@ class MePage extends StatelessWidget {
     );
   }
 
-  /* ----------------------------- HELPERS ------------------------------ */
+  // ----------------------------- HELPERS ------------------------------ //
 
-  Widget _whiteCard({required Widget child, required EdgeInsetsGeometry padding}) {
+  Widget _whiteCard({
+    required Widget child,
+    required EdgeInsetsGeometry padding,
+  }) {
     return Container(
       width: double.infinity,
       padding: padding,
@@ -279,23 +468,26 @@ class MePage extends StatelessWidget {
     );
   }
 
-  static Widget _circle(double size, Color color) => Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(shape: BoxShape.circle, color: color),
-      );
+  static Widget _circle(double size, Color color) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+    );
+  }
 }
 
-class _MenuData {
-  final IconData icon;
+// Model Pendukung Menu
+class MenuData {
+  final Widget icon;
   final String title;
-  const _MenuData(this.icon, this.title);
+  const MenuData(this.icon, this.title);
 }
 
-/// Halaman putih sederhana: "ini order history", "ini my addresses", dst.
-class _SimplePage extends StatelessWidget {
+// Halaman Navigasi Sederhana
+class SimplePage extends StatelessWidget {
   final String title;
-  const _SimplePage({required this.title});
+  const SimplePage({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -315,4 +507,46 @@ class _SimplePage extends StatelessWidget {
       ),
     );
   }
+}
+
+// Gambar outline gelembung WhatsApp: lingkaran dengan ekor lancip di kiri bawah
+class _WaBubblePainter extends CustomPainter {
+  final Color color;
+  const _WaBubblePainter(this.color);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    const stroke = 2.0;
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = stroke
+      ..strokeJoin = StrokeJoin.round
+      ..strokeCap = StrokeCap.round;
+
+    final c = Offset(size.width / 2, size.height / 2);
+    final r = size.width / 2 - stroke / 2 - 0.5;
+    final rect = Rect.fromCircle(center: c, radius: r);
+
+    const deg = math.pi / 180;
+    const start = 160 * deg; // awal busur (kiri bawah)
+    const sweep = 305 * deg; // putar searah jarum jam sampai dekat dasar
+
+    final path = Path()..addArc(rect, start, sweep);
+
+    // Ekor lancip di pojok kiri bawah
+    final tip = Offset(stroke * 0.9, size.height - stroke * 0.9);
+    final startPt = Offset(
+      c.dx + r * math.cos(start),
+      c.dy + r * math.sin(start),
+    );
+    path
+      ..lineTo(tip.dx, tip.dy)
+      ..lineTo(startPt.dx, startPt.dy);
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _WaBubblePainter old) => old.color != color;
 }
