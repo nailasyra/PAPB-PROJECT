@@ -112,7 +112,7 @@ class _MainNavigationState extends State<MainNavigation> {
   final List<Widget> pages = const [
     HomePage(),
     MenuPage(),
-    QRPage(),
+    MyQrCodePage(),
     MemberPage(),
     MePage(),
   ];
