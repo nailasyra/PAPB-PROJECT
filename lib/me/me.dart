@@ -3,10 +3,13 @@ import '../auth/register.dart';
 import '../auth/login.dart';
 import '../database/database_helper.dart';
 import 'package:flutter/material.dart';
+import 'my_profile.dart';
+import 'settings.dart';
 
 class MePage extends StatelessWidget {
   const MePage({
     super.key,
+    this.user,
     this.isLoggedIn = false,
     this.name = 'caca',
     this.level = 1,
@@ -16,6 +19,7 @@ class MePage extends StatelessWidget {
     this.onRegisterSuccess,
   });
 
+  final UserModel? user;
   final bool isLoggedIn;
   final String name;
   final int level;
@@ -169,11 +173,21 @@ class MePage extends StatelessWidget {
     );
   }
 
-  void _open(BuildContext context, String title) {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => SimplePage(title: title)),
-    );
-  }
+
+void _open(BuildContext context, String title) {
+  Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (_) {
+        if (title == 'Settings') {
+          return SettingsPage(isLoggedIn: isLoggedIn, user: user);
+        }
+
+        return SimplePage(title: title);
+      },
+    ),
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -589,6 +603,7 @@ class SimplePage extends StatelessWidget {
     );
   }
 }
+
 
 // Gambar outline gelembung WhatsApp: lingkaran dengan ekor lancip di kiri bawah
 class _WaBubblePainter extends CustomPainter {

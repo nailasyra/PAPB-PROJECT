@@ -1,3 +1,4 @@
+// MainNavigation: currentUser diteruskan ke MePage
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -117,6 +118,7 @@ class _MainNavigationState extends State<MainNavigation> {
         const SizedBox.shrink(),
         const MemberPage(),
         MePage(
+          user: currentUser,
           isLoggedIn: currentUser != null,
           name: currentUser?.nickname ?? 'caca',
           onRegisterSuccess: (user) {
