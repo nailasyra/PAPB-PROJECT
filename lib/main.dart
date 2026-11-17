@@ -14,7 +14,6 @@ void main() {
   runApp(const TomoroApp());
 }
 
-
 // ==========================================
 // CUSTOM BOTTOM BAR - LENGKUNGAN CEMBUNG
 // ==========================================
@@ -113,73 +112,84 @@ class _MainNavigationState extends State<MainNavigation> {
   UserModel? currentUser;
 
   List<Widget> get pages => [
-        const HomePage(),
-        const MenuPage(),
-        const SizedBox.shrink(),
-        const MemberPage(),
-        MePage(
-          user: currentUser,
-          isLoggedIn: currentUser != null,
-          name: currentUser?.nickname ?? 'caca',
-          onRegisterSuccess: (user) {
-            setState(() {
-              currentUser = user;
-              selectedIndex = 4;
-            });
-          },
-        ),
-      ];
+    const HomePage(),
+    const MenuPage(),
+    const SizedBox.shrink(),
+    const MemberPage(),
+    MePage(
+      isLoggedIn: currentUser != null,
+      name: currentUser?.nickname ?? 'caca',
+      currentUser: currentUser,
+
+      onRegisterSuccess: (user) {
+        setState(() {
+          currentUser = user;
+          selectedIndex = 4;
+        });
+      },
+
+      onProfileUpdated: (updatedUser) {
+        setState(() {
+          currentUser = updatedUser;
+        });
+      },
+
+      onLogout: () {
+        setState(() {
+          currentUser = null;
+          selectedIndex = 4;
+        });
+      },
+
+      onAccountDeleted: () {
+        setState(() {
+          currentUser = null;
+          selectedIndex = 4;
+        });
+      },
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: selectedIndex,
-        children: pages,
-      ),
+      body: IndexedStack(index: selectedIndex, children: pages),
 
       // ======================================
       // FLOATING QR BUTTON
       // ======================================
 
-      
-// ======================================
-// FLOATING QR BUTTON
-// ======================================
-
-floatingActionButton: SizedBox(
-  width: 50,
-  height: 50,
-  child: FloatingActionButton(
-    onPressed: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const MyQrCodePage(),
+      // ======================================
+      // FLOATING QR BUTTON
+      // ======================================
+      floatingActionButton: SizedBox(
+        width: 50,
+        height: 50,
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const MyQrCodePage()),
+            );
+          },
+          backgroundColor: const Color(0xFFFF5428),
+          elevation: 2,
+          shape: const CircleBorder(),
+          child: Image.asset(
+            'assets/images/icon/qr.png',
+            width: 35,
+            height: 35,
+            color: Colors.white,
+            fit: BoxFit.contain,
+          ),
         ),
-      );
-    },
-    backgroundColor: const Color(0xFFFF5428),
-    elevation: 2,
-    shape: const CircleBorder(),
-    child: Image.asset(
-      'assets/images/icon/qr.png',
-      width: 35,
-      height: 35,
-      color: Colors.white,
-      fit: BoxFit.contain,
-    ),
-  ),
-),
+      ),
 
-floatingActionButtonLocation:
-    FloatingActionButtonLocation.centerDocked,
-
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
       // ======================================
       // BOTTOM NAVIGATION BAR
       // ======================================
-
       bottomNavigationBar: BottomAppBar(
         color: Colors.white,
         elevation: 8,
@@ -195,17 +205,9 @@ floatingActionButtonLocation:
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            navItem(
-              'assets/images/icon/home.svg',
-              'Home',
-              0,
-            ),
+            navItem('assets/images/icon/home.svg', 'Home', 0),
 
-            navItem(
-              'assets/images/icon/menu.svg',
-              'Menu',
-              1,
-            ),
+            navItem('assets/images/icon/menu.svg', 'Menu', 1),
 
             // Ruang khusus untuk tombol QR
             SizedBox(
@@ -224,17 +226,9 @@ floatingActionButtonLocation:
               ),
             ),
 
-            navItem(
-              'assets/images/icon/member.svg',
-              'Member',
-              3,
-            ),
+            navItem('assets/images/icon/member.svg', 'Member', 3),
 
-            navItem(
-              'assets/images/icon/me.svg',
-              'Me',
-              4,
-            ),
+            navItem('assets/images/icon/me.svg', 'Me', 4),
           ],
         ),
       ),
@@ -247,50 +241,48 @@ floatingActionButtonLocation:
 
   Widget navItem(String iconPath, String title, int index) {
     final bool isSelected = selectedIndex == index;
-return Expanded(
-  child: InkWell(
-    splashColor: Colors.transparent,
-    highlightColor: Colors.transparent,
-    hoverColor: Colors.transparent,
+    return Expanded(
+      child: InkWell(
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        hoverColor: Colors.transparent,
 
-    onTap: () {
-      setState(() {
-        selectedIndex = index;
-      });
-    },
+        onTap: () {
+          setState(() {
+            selectedIndex = index;
+          });
+        },
 
-    child: SizedBox(
-      height: 65,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SvgPicture.asset(
-            iconPath,
-            width: 23,
-            height: 23,
-            colorFilter: ColorFilter.mode(
-              isSelected
-                  ? const Color(0xFFFF5428)
-                  : const Color(0xFFD0D0D0),
-              BlendMode.srcIn,
-            ),
+        child: SizedBox(
+          height: 65,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset(
+                iconPath,
+                width: 23,
+                height: 23,
+                colorFilter: ColorFilter.mode(
+                  isSelected
+                      ? const Color(0xFFFF5428)
+                      : const Color(0xFFD0D0D0),
+                  BlendMode.srcIn,
+                ),
+              ),
+
+              const SizedBox(height: 3),
+
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 11,
+                  color: isSelected ? const Color(0xFFFF5428) : Colors.grey,
+                ),
+              ),
+            ],
           ),
-
-          const SizedBox(height: 3),
-
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 11,
-              color: isSelected
-                  ? const Color(0xFFFF5428)
-                  : Colors.grey,
-            ),
-          ),
-        ],
+        ),
       ),
-    ),
-  ),
-);
+    );
   }
 }

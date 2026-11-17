@@ -91,6 +91,22 @@ class DatabaseHelper {
     );
   }
 
+// UPDATE USER
+Future<int> updateUser(UserModel user) async {
+  final db = await database;
+
+  return await db.update(
+    'users',
+    {
+      'nickname': user.nickname,
+      'email': user.email,
+      'gender': user.gender,
+    },
+    where: 'id = ?',
+    whereArgs: [user.id],
+    conflictAlgorithm: ConflictAlgorithm.abort,
+  );
+}
   // GET USER BY EMAIL
   Future<UserModel?> getUserByEmail(String email) async {
     final db = await database;

@@ -1,8 +1,11 @@
 import 'dart:math' as math;
+
 import '../auth/register.dart';
 import '../auth/login.dart';
 import '../database/database_helper.dart';
+
 import 'package:flutter/material.dart';
+
 import 'my_profile.dart';
 import 'settings.dart';
 
@@ -17,6 +20,10 @@ class MePage extends StatelessWidget {
     this.points = 0,
     this.mascotAsset = 'assets/images/icon/me icon 1.png',
     this.onRegisterSuccess,
+    this.currentUser,
+    this.onProfileUpdated,
+    this.onLogout,
+    this.onAccountDeleted,
   });
 
   final UserModel? user;
@@ -27,6 +34,11 @@ class MePage extends StatelessWidget {
   final int points;
   final String mascotAsset;
   final ValueChanged<UserModel>? onRegisterSuccess;
+  final UserModel? currentUser;
+  final ValueChanged<UserModel>? onProfileUpdated;
+  final VoidCallback? onLogout;
+  final VoidCallback? onAccountDeleted;
+  
 
   // Warna Lokal
   static const Color _orange = Color(0xFFFF5A1F);
@@ -108,21 +120,21 @@ class MePage extends StatelessWidget {
   static Widget _qrIcon({double size = 26}) {
     final c = size * 0.42;
     Widget box() => Container(
-          width: c,
-          height: c,
-          decoration: BoxDecoration(
-            border: Border.all(color: _orange, width: 2),
-            borderRadius: BorderRadius.circular(4),
-          ),
-        );
+      width: c,
+      height: c,
+      decoration: BoxDecoration(
+        border: Border.all(color: _orange, width: 2),
+        borderRadius: BorderRadius.circular(4),
+      ),
+    );
     Widget bar() => Container(
-          width: 2.5,
-          height: c,
-          decoration: BoxDecoration(
-            color: _orange,
-            borderRadius: BorderRadius.circular(2),
-          ),
-        );
+      width: 2.5,
+      height: c,
+      decoration: BoxDecoration(
+        color: _orange,
+        borderRadius: BorderRadius.circular(2),
+      ),
+    );
     return SizedBox(
       width: size,
       height: size,
@@ -173,21 +185,31 @@ class MePage extends StatelessWidget {
     );
   }
 
+  void _open(BuildContext context, String title) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) {
+          if (title == 'Settings') {
+            return SettingsPage(
+              isLoggedIn: isLoggedIn,
+              user: currentUser,
+              onProfileUpdated: (updatedUser) {
+                onProfileUpdated?.call(updatedUser);
+              },
+              onLogout: () {
+                onLogout?.call();
+              },
+              onAccountDeleted: () {
+    onAccountDeleted?.call();
+  },
+            );
+          }
 
-void _open(BuildContext context, String title) {
-  Navigator.of(context).push(
-    MaterialPageRoute(
-      builder: (_) {
-        if (title == 'Settings') {
-          return SettingsPage(isLoggedIn: isLoggedIn, user: user);
-        }
-
-        return SimplePage(title: title);
-      },
-    ),
-  );
-}
-
+          return SimplePage(title: title);
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -206,17 +228,26 @@ void _open(BuildContext context, String title) {
           Positioned(
             right: -25,
             top: 40,
-            child: _circle(100, const Color.fromARGB(255, 250, 202, 187).withOpacity(0.35)),
+            child: _circle(
+              100,
+              const Color.fromARGB(255, 250, 202, 187).withOpacity(0.35),
+            ),
           ),
           Positioned(
             right: -25,
             top: 125,
-            child: _circle(100, const Color.fromARGB(255, 250, 202, 187).withOpacity(0.35)),
+            child: _circle(
+              100,
+              const Color.fromARGB(255, 250, 202, 187).withOpacity(0.35),
+            ),
           ),
           Positioned(
             right: 55,
             top: 110,
-            child: _circle(90, const Color.fromARGB(255, 250, 202, 187).withOpacity(0.35)),
+            child: _circle(
+              90,
+              const Color.fromARGB(255, 250, 202, 187).withOpacity(0.35),
+            ),
           ),
           SafeArea(
             bottom: false,
@@ -254,144 +285,140 @@ void _open(BuildContext context, String title) {
 
   // ------------------------------ HEADER ------------------------------ //
 
-  
-Widget _buildHeader(BuildContext context, double width) {
-  return SizedBox(
-    width: double.infinity,
-    height: 266,
-    child: Stack(
-      clipBehavior: Clip.none,
-      children: [
-        if (isLoggedIn) ...[
-          // AVATAR
-          Positioned(
-            left: 20,
-            top: 130,
-            child: Container(
-              width: 80,
-              height: 80,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-              ),
-              child: ClipOval(
-                child: Image.asset(
-                  'assets/images/icon/me icon 2.png',
-                  fit: BoxFit.cover,
+  Widget _buildHeader(BuildContext context, double width) {
+    return SizedBox(
+      width: double.infinity,
+      height: 266,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          if (isLoggedIn) ...[
+            // AVATAR
+            Positioned(
+              left: 20,
+              top: 130,
+              child: Container(
+                width: 80,
+                height: 80,
+                decoration: const BoxDecoration(shape: BoxShape.circle),
+                child: ClipOval(
+                  child: Image.asset(
+                    'assets/images/icon/me icon 2.png',
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
-          ),
 
-          // NAMA PENGGUNA
-          Positioned(
-            left: 101,
-            top: 138,
-            child: Text(
-              name,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
-                color: _text,
-              ),
-            ),
-          ),
-
-          // LEVEL
-          Positioned(
-            left: 101,
-            top: 174,
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 10,
-                vertical: 2,
-              ),
-              decoration: BoxDecoration(
-                color: const Color(0xFF9C8C7C),
-                borderRadius: BorderRadius.circular(10),
-              ),
+            // NAMA PENGGUNA
+            Positioned(
+              left: 101,
+              top: 138,
               child: Text(
-                'Lv.$level',
+                name,
                 style: const TextStyle(
-                  fontSize: 12,
+                  fontSize: 24,
                   fontWeight: FontWeight.w700,
-                  color: Colors.white,
+                  color: _text,
                 ),
               ),
             ),
-          ),
-        ] else ...[
-          // HEADER GUEST
-          Positioned(
-            left: 20,
-            top: 100,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Hi! Friends',
-                  style: TextStyle(
-                    fontSize: 27,
-                    fontWeight: FontWeight.w800,
-                    color: _text,
+
+            // LEVEL
+            Positioned(
+              left: 101,
+              top: 174,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 2,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF9C8C7C),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  'Lv.$level',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
                   ),
                 ),
+              ),
+            ),
+          ] else ...[
+            // HEADER GUEST
+            Positioned(
+              left: 20,
+              top: 100,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Hi! Friends',
+                    style: TextStyle(
+                      fontSize: 27,
+                      fontWeight: FontWeight.w800,
+                      color: _text,
+                    ),
+                  ),
 
-                const SizedBox(height: 12),
+                  const SizedBox(height: 12),
 
-                SizedBox(
-                  width: 112,
-                  height: 38,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      final user = await Navigator.push<UserModel>(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginPage(),
+                  SizedBox(
+                    width: 112,
+                    height: 38,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        final user = await Navigator.push<UserModel>(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginPage(),
+                          ),
+                        );
+
+                        if (user != null) {
+                          onRegisterSuccess?.call(user);
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: _orange,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        padding: EdgeInsets.zero,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25),
                         ),
-                      );
-
-                      if (user != null) {
-                        onRegisterSuccess?.call(user);
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: _orange,
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      padding: EdgeInsets.zero,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
                       ),
-                    ),
-                    child: const Text(
-                      'Login',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
+                      child: const Text(
+                        'Login',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
+            ),
+          ],
+
+          // MASKOT TOMORO
+          Positioned(
+            right: 6,
+            bottom: -4,
+            child: Image.asset(
+              mascotAsset,
+              width: width * 0.32,
+              fit: BoxFit.contain,
             ),
           ),
         ],
-
-        // MASKOT TOMORO
-        Positioned(
-          right: 6,
-          bottom: -4,
-          child: Image.asset(
-            mascotAsset,
-            width: width * 0.32,
-            fit: BoxFit.contain,
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
+      ),
+    );
+  }
 
   // ---------------------------- STATS CARD ---------------------------- //
 
@@ -405,8 +432,11 @@ Widget _buildHeader(BuildContext context, double width) {
             children: [
               _buildStatItem(
                 'Vouchers',
-                const Icon(Icons.confirmation_number_outlined,
-                    color: _orange, size: 26),
+                const Icon(
+                  Icons.confirmation_number_outlined,
+                  color: _orange,
+                  size: 26,
+                ),
                 value: isLoggedIn ? '$vouchers' : '-',
               ),
               _buildStatItem(
@@ -426,11 +456,15 @@ Widget _buildHeader(BuildContext context, double width) {
               padding: EdgeInsets.symmetric(vertical: 14),
               child: Row(
                 children: [
-                  Text('Achievement',
-                      style: TextStyle(fontSize: 14, color: _text)),
+                  Text(
+                    'Achievement',
+                    style: TextStyle(fontSize: 14, color: _text),
+                  ),
                   Spacer(),
-                  Text('Collect your medals!',
-                      style: TextStyle(fontSize: 13, color: _grey)),
+                  Text(
+                    'Collect your medals!',
+                    style: TextStyle(fontSize: 13, color: _grey),
+                  ),
                   SizedBox(width: 6),
                   Icon(Icons.chevron_right_rounded, color: _grey, size: 20),
                 ],
@@ -453,21 +487,21 @@ Widget _buildHeader(BuildContext context, double width) {
       child: Column(
         children: [
           SizedBox(
-  width: 100,
-  child: FittedBox(
-    fit: BoxFit.scaleDown,
-    child: Text(
-      title,
-      maxLines: 1,
-      softWrap: false,
-      style: const TextStyle(
-        fontSize: 14,
-        fontWeight: FontWeight.w700,
-        color: _text,
-      ),
-    ),
-  ),
-),
+            width: 100,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                title,
+                maxLines: 1,
+                softWrap: false,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: _text,
+                ),
+              ),
+            ),
+          ),
           const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -520,8 +554,10 @@ Widget _buildHeader(BuildContext context, double width) {
             InkWell(
               onTap: () => _open(context, m.title),
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 18, vertical: 13),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 18,
+                  vertical: 13,
+                ),
                 child: Row(
                   children: [
                     m.icon,
@@ -603,7 +639,6 @@ class SimplePage extends StatelessWidget {
     );
   }
 }
-
 
 // Gambar outline gelembung WhatsApp: lingkaran dengan ekor lancip di kiri bawah
 class _WaBubblePainter extends CustomPainter {

@@ -160,7 +160,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     const SizedBox(height: 60),
 
                     _label('Email'),
-                    _textField(emailController, readOnly: true),
+                    _textField(emailController),
 
                     const SizedBox(height: 60),
 
@@ -225,16 +225,48 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 width: double.infinity,
                 height: 65,
                 child: ElevatedButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          'Tampilan My Profile sudah siap. '
-                          'Fungsi penyimpanan akan dihubungkan berikutnya.',
-                        ),
-                      ),
-                    );
-                  },
+                  onPressed: () async {
+  final updatedUser = UserModel(
+    id: widget.user.id,
+    nickname: nicknameController.text.trim(),
+    email: emailController.text.trim(),
+    gender: gender.isEmpty ? null : gender,
+    birthday: widget.user.birthday,
+    pin: widget.user.pin,
+  );
+
+  if (updatedUser.nickname.isEmpty ||
+      updatedUser.email.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Nick Name dan Email wajib diisi.'),
+      ),
+    );
+    return;
+  }
+
+  try {
+    await DatabaseHelper.instance.updateUser(updatedUser);
+
+    if (!mounted) return;
+
+    Navigator.pop(context, updatedUser);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Profile berhasil diperbarui!'),
+      ),
+    );
+  } catch (e) {
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Email sudah digunakan oleh akun lain.'),
+      ),
+    );
+  }
+},
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFEF653B),
                     foregroundColor: Colors.white,
