@@ -1,22 +1,28 @@
 import 'dart:math' as math;
-
+import '../auth/register.dart';
+import '../auth/login.dart';
+import '../database/database_helper.dart';
 import 'package:flutter/material.dart';
 
 class MePage extends StatelessWidget {
   const MePage({
     super.key,
+    this.isLoggedIn = false,
     this.name = 'caca',
     this.level = 1,
     this.vouchers = 2,
     this.points = 0,
     this.mascotAsset = 'assets/images/icon/me icon 1.png',
+    this.onRegisterSuccess,
   });
 
+  final bool isLoggedIn;
   final String name;
   final int level;
   final int vouchers;
   final int points;
   final String mascotAsset;
+  final ValueChanged<UserModel>? onRegisterSuccess;
 
   // Warna Lokal
   static const Color _orange = Color(0xFFFF5A1F);
@@ -213,7 +219,7 @@ class MePage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _buildHeader(vw),
+                          _buildHeader(context, vw),
                           _buildStatsCard(),
                           const SizedBox(height: 12),
                           _buildPromoBanner(),
@@ -234,14 +240,16 @@ class MePage extends StatelessWidget {
 
   // ------------------------------ HEADER ------------------------------ //
 
-  Widget _buildHeader(double width) {
-    return SizedBox(
-      width: double.infinity,
-      height: 266,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          // Avatar
+  
+Widget _buildHeader(BuildContext context, double width) {
+  return SizedBox(
+    width: double.infinity,
+    height: 266,
+    child: Stack(
+      clipBehavior: Clip.none,
+      children: [
+        if (isLoggedIn) ...[
+          // AVATAR
           Positioned(
             left: 20,
             top: 130,
@@ -249,6 +257,7 @@ class MePage extends StatelessWidget {
               width: 80,
               height: 80,
               decoration: const BoxDecoration(
+                shape: BoxShape.circle,
               ),
               child: ClipOval(
                 child: Image.asset(
@@ -258,7 +267,8 @@ class MePage extends StatelessWidget {
               ),
             ),
           ),
-          // Nama
+
+          // NAMA PENGGUNA
           Positioned(
             left: 101,
             top: 138,
@@ -271,15 +281,19 @@ class MePage extends StatelessWidget {
               ),
             ),
           ),
-          // Badge Level
+
+          // LEVEL
           Positioned(
             left: 101,
             top: 174,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10,
+                vertical: 2,
+              ),
               decoration: BoxDecoration(
                 color: const Color(0xFF9C8C7C),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
                 'Lv.$level',
@@ -291,20 +305,79 @@ class MePage extends StatelessWidget {
               ),
             ),
           ),
-          // Maskot
+        ] else ...[
+          // HEADER GUEST
           Positioned(
-            right: 6,
-            bottom: -4,
-            child: Image.asset(
-              mascotAsset,
-              width: width * 0.32,
-              fit: BoxFit.contain,
+            left: 20,
+            top: 100,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Hi! Friends',
+                  style: TextStyle(
+                    fontSize: 27,
+                    fontWeight: FontWeight.w800,
+                    color: _text,
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+
+                SizedBox(
+                  width: 112,
+                  height: 38,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      final user = await Navigator.push<UserModel>(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginPage(),
+                        ),
+                      );
+
+                      if (user != null) {
+                        onRegisterSuccess?.call(user);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _orange,
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      padding: EdgeInsets.zero,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                    ),
+                    child: const Text(
+                      'Login',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
-      ),
-    );
-  }
+
+        // MASKOT TOMORO
+        Positioned(
+          right: 6,
+          bottom: -4,
+          child: Image.asset(
+            mascotAsset,
+            width: width * 0.32,
+            fit: BoxFit.contain,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 
   // ---------------------------- STATS CARD ---------------------------- //
 
@@ -320,12 +393,12 @@ class MePage extends StatelessWidget {
                 'Vouchers',
                 const Icon(Icons.confirmation_number_outlined,
                     color: _orange, size: 26),
-                value: '$vouchers',
+                value: isLoggedIn ? '$vouchers' : '-',
               ),
               _buildStatItem(
                 'TOMORO Points',
                 _coinIcon(),
-                value: '$points',
+                value: isLoggedIn ? '$points' : '-',
                 suffix: ' pts',
               ),
               _buildStatItem('QR Code', _qrIcon()),
@@ -365,14 +438,22 @@ class MePage extends StatelessWidget {
       width: 100,
       child: Column(
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-              color: _text,
-            ),
-          ),
+          SizedBox(
+  width: 100,
+  child: FittedBox(
+    fit: BoxFit.scaleDown,
+    child: Text(
+      title,
+      maxLines: 1,
+      softWrap: false,
+      style: const TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w700,
+        color: _text,
+      ),
+    ),
+  ),
+),
           const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -405,7 +486,7 @@ class MePage extends StatelessWidget {
 
   Widget _buildPromoBanner() {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(18),
+      borderRadius: BorderRadius.circular(10),
       child: Image.asset(
         'assets/images/backgrounds/mebanner.jpeg',
         width: double.infinity,
@@ -462,7 +543,7 @@ class MePage extends StatelessWidget {
       padding: padding,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: child,
     );

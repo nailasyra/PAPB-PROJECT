@@ -7,6 +7,7 @@ import 'menu/menu.dart';
 import 'qr/qr.dart';
 import 'member/member.dart';
 import 'me/me.dart';
+import 'database/database_helper.dart';
 
 void main() {
   runApp(const TomoroApp());
@@ -108,14 +109,24 @@ class MainNavigation extends StatefulWidget {
 
 class _MainNavigationState extends State<MainNavigation> {
   int selectedIndex = 0;
+  UserModel? currentUser;
 
-  final List<Widget> pages = const [
-    HomePage(),
-    MenuPage(),
-    MyQrCodePage(),
-    MemberPage(),
-    MePage(),
-  ];
+  List<Widget> get pages => [
+        const HomePage(),
+        const MenuPage(),
+        const SizedBox.shrink(),
+        const MemberPage(),
+        MePage(
+          isLoggedIn: currentUser != null,
+          name: currentUser?.nickname ?? 'caca',
+          onRegisterSuccess: (user) {
+            setState(() {
+              currentUser = user;
+              selectedIndex = 4;
+            });
+          },
+        ),
+      ];
 
   @override
   Widget build(BuildContext context) {
@@ -129,30 +140,39 @@ class _MainNavigationState extends State<MainNavigation> {
       // FLOATING QR BUTTON
       // ======================================
 
-      floatingActionButton: SizedBox(
-        width: 50,
-        height: 50,
-        child: FloatingActionButton(
-          onPressed: () {
-            setState(() {
-              selectedIndex = 2;
-            });
-          },
-          backgroundColor: const Color(0xFFFF5428),
-          elevation: 2,
-          shape: const CircleBorder(),
-          child: Image.asset(
-            'assets/images/icon/qr.png',
-            width: 35,
-            height: 35,
-            color: Colors.white,
-            fit: BoxFit.contain,
-          ),
-        ),
-      ),
+      
+// ======================================
+// FLOATING QR BUTTON
+// ======================================
 
-      floatingActionButtonLocation:
+floatingActionButton: SizedBox(
+  width: 50,
+  height: 50,
+  child: FloatingActionButton(
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const MyQrCodePage(),
+        ),
+      );
+    },
+    backgroundColor: const Color(0xFFFF5428),
+    elevation: 2,
+    shape: const CircleBorder(),
+    child: Image.asset(
+      'assets/images/icon/qr.png',
+      width: 35,
+      height: 35,
+      color: Colors.white,
+      fit: BoxFit.contain,
+    ),
+  ),
+),
+
+floatingActionButtonLocation:
     FloatingActionButtonLocation.centerDocked,
+
 
       // ======================================
       // BOTTOM NAVIGATION BAR
