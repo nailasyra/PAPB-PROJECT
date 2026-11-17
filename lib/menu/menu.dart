@@ -35,6 +35,7 @@ const List<Map<String, dynamic>> menuData = [
     'label': 'MONTHLY\nPROMO',
     'badge': '',
     'logo': 'assets/images/icon/promo.svg',
+    'banner': 'assets/images/backgrounds/montly_promo_menu.jpeg',
     'icon': null,
     'type': 'banner',
     'products': [],
@@ -43,7 +44,7 @@ const List<Map<String, dynamic>> menuData = [
     'category': 'MASTER S.O.E SERIES',
     'label': 'MASTER\nS.O.E\nSERIES',
     'badge': 'CHAMPION',
-    'logo': 'assets/images/icon/soe.svg',
+    'logo': 'assets/images/icon/seo.svg',
     'icon': null,
     'products': [
       {
@@ -204,16 +205,26 @@ const List<Map<String, dynamic>> menuData = [
     ],
   },
   {
-    'category': 'FRAPE',
-    'label': 'FRAPE',
+    'category': 'FOOD',
+    'label': 'FOOD',
     'badge': '',
     'logo': '',
-    'icon': Icons.local_cafe_outlined,
+    'icon': Icons.breakfast_dining_outlined,
     'products': [
       {
-        'name': 'Chocolate Frape',
-        'price': 'Rp 19.000',
-        'image': 'https://huawei-food-cms.grab.com/compressed_webp/items/url-200a7a10/photo/cc6d18c2fef724a.webp',
+        'name': 'Butter Croissant',
+        'price': 'Rp 16.000',
+        'image': 'https://huawei-food-cms.grab.com/compressed_webp/items/url-046d6fb2/photo/69a87fd6e8ec4692.webp',
+      },
+      {
+        'name': 'Choco Denish',
+        'price': 'Rp 20.000',
+        'image': 'https://huawei-food-cms.grab.com/compressed_webp/items/url-3842eaf0/photo/8e516236c481dff7.webp',
+      },
+      {
+        'name': 'Cinamon Roll',
+        'price': 'Rp 18.000',
+        'image': 'https://huawei-food-cms.grab.com/compressed_webp/items/url-771870d7/photo/e241d6d6a85c81.webp',
       },
     ],
   },
@@ -336,7 +347,7 @@ class _MenuPageState extends State<MenuPage> {
                   children: [
                     // SIDEBAR KIRI
                     SizedBox(
-                      width: 84,
+                      width: 76,
                       child: CategorySidebar(
                         categories: menuData,
                         selectedIndex: selectedCategory,
@@ -371,11 +382,10 @@ class _MenuPageState extends State<MenuPage> {
 
                                 return CategorySection(
                                   key: sectionKeys[index],
-                                  title: category['category'],
+                                  title: category['category'] as String,
                                   products: products,
                                   onProductTap: widget.onProductTap,
-                                  isBanner:
-                                      category['category'] == 'MONTHLY PROMO',
+                                  bannerImage: category['banner'] as String?,
                                 );
                               },
                             ),
@@ -415,10 +425,10 @@ class MenuHeader extends StatelessWidget {
             children: [
               // PICKUP / DELIVERY
               Expanded(
-                flex: 3,
+                flex: 5,
                 child: Container(
-                  height: 43,
-                  padding: const EdgeInsets.all(5),
+                  height: 35,
+                  padding: const EdgeInsets.all(3),
                   decoration: BoxDecoration(
                     color: const Color(0xFFF1F1F1),
                     borderRadius: BorderRadius.circular(30),
@@ -426,29 +436,34 @@ class MenuHeader extends StatelessWidget {
                   child: Row(
                     children: [
                       Expanded(
-                        child: Container(
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(25),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 3,
+                            vertical: 1,
                           ),
-                          child: const Text(
-                            'Pickup',
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF303030),
+                          child: Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            child: const Text(
+                              'Pickup',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF303030),
+                              ),
                             ),
                           ),
                         ),
                       ),
-
                       const Expanded(
                         child: Center(
                           child: Text(
                             'Delivery',
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                               color: Color(0xFF555555),
                             ),
                           ),
@@ -459,13 +474,14 @@ class MenuHeader extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(width: 12),
+              // JARAK ANTARA DELIVERY DAN SEARCH
+              const Spacer(flex: 2),
 
               // SEARCH
               Expanded(
-                flex: 2,
+                flex: 3,
                 child: Container(
-                  height: 43,
+                  height: 35,
                   decoration: BoxDecoration(
                     color: const Color(0xFFF7F7F7),
                     borderRadius: BorderRadius.circular(30),
@@ -476,14 +492,14 @@ class MenuHeader extends StatelessWidget {
                       Icon(
                         Icons.search,
                         color: Color(0xFF999999),
-                        size: 25,
+                        size: 23,
                       ),
                       SizedBox(width: 6),
                       Text(
                         'Search',
                         style: TextStyle(
                           color: Color(0xFF999999),
-                          fontSize: 15,
+                          fontSize: 14,
                         ),
                       ),
                     ],
@@ -497,27 +513,29 @@ class MenuHeader extends StatelessWidget {
 
           // LOKASI TOKO
           const Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               // LOGO RUKO SVG
               _StoreIcon(),
               SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  'Ruko Panam',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF292929),
-                  ),
+
+              Text(
+                'Ruko Panam',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF292929),
                 ),
               ),
+
+              SizedBox(width: 4),
 
               Icon(
                 Icons.chevron_right,
                 color: Color(0xFFCCCCCC),
-                size: 28,
+                size: 23,
               ),
             ],
           ),
@@ -536,8 +554,8 @@ class _StoreIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       'assets/images/icon/ruko.svg',
-      width: 30,
-      height: 30,
+      width: 21,
+      height: 21,
       fit: BoxFit.contain,
     );
   }
@@ -561,9 +579,8 @@ class _BannerCarouselState extends State<BannerCarousel> {
 
   // MASUKKAN LINK BANNER DI SINI
   final List<String> banners = [
-    '',
-    '',
-    '',
+    'assets/images/backgrounds/menu_benner_1.jpeg',
+    'assets/images/backgrounds/menu_benner_2.jpeg',
   ];
 
   @override
@@ -587,10 +604,14 @@ class _BannerCarouselState extends State<BannerCarousel> {
                   padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(18),
-                    child: _NetworkImage(
-                      imageUrl: banners[index],
+                    child: Image.asset(
+                      banners[index],
                       fit: BoxFit.cover,
                       width: double.infinity,
+                      errorBuilder: (context, error, stackTrace) {
+                        debugPrint('Gagal memuat banner: $error');
+                        return const Icon(Icons.broken_image_outlined);
+                      },
                     ),
                   ),
                 );
@@ -632,7 +653,8 @@ class _BannerCarouselState extends State<BannerCarousel> {
 // ======================================================
 // SIDEBAR KATEGORI
 // ======================================================
-class CategorySidebar extends StatelessWidget {
+
+class CategorySidebar extends StatefulWidget {
   final List<Map<String, dynamic>> categories;
   final int selectedIndex;
   final Function(int) onCategoryTap;
@@ -645,26 +667,86 @@ class CategorySidebar extends StatelessWidget {
   });
 
   @override
+  State<CategorySidebar> createState() => _CategorySidebarState();
+}
+
+class _CategorySidebarState extends State<CategorySidebar> {
+  late List<GlobalKey> itemKeys;
+
+  @override
+  void initState() {
+    super.initState();
+
+    itemKeys = List.generate(
+      widget.categories.length,
+      (index) => GlobalKey(),
+    );
+  }
+
+  // OTOMATIS MENGIKUTI KATEGORI AKTIF
+  @override
+  void didUpdateWidget(covariant CategorySidebar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // Perbarui key jika jumlah kategori berubah
+    if (oldWidget.categories.length != widget.categories.length) {
+      itemKeys = List.generate(
+        widget.categories.length,
+        (index) => GlobalKey(),
+      );
+    }
+
+    // Geser sidebar ketika kategori aktif berubah
+    if (oldWidget.selectedIndex != widget.selectedIndex) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+
+        if (widget.selectedIndex < 0 ||
+            widget.selectedIndex >= itemKeys.length) {
+          return;
+        }
+
+        final selectedContext =
+            itemKeys[widget.selectedIndex].currentContext;
+
+        if (selectedContext != null) {
+          Scrollable.ensureVisible(
+            selectedContext,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            alignment: 0.35,
+          );
+        }
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 84,
+      width: 76,
       child: ListView.builder(
         padding: EdgeInsets.zero,
-        itemCount: categories.length,
+        itemCount: widget.categories.length,
         itemBuilder: (context, index) {
-          final category = categories[index];
+          final category = widget.categories[index];
 
-          final isSelected = selectedIndex == index;
+          final isSelected = widget.selectedIndex == index;
+
           final String badge =
               category['badge'] as String? ?? '';
+
           final String label =
               category['label'] as String? ?? '';
+
           final String logo =
               category['logo'] as String? ?? '';
+
           final dynamic icon = category['icon'];
 
           return InkWell(
-            onTap: () => onCategoryTap(index),
+            key: itemKeys[index],
+            onTap: () => widget.onCategoryTap(index),
             child: Container(
               width: double.infinity,
               constraints: const BoxConstraints(
@@ -691,7 +773,7 @@ class CategorySidebar extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Badge kategori
+                    // BADGE KATEGORI
                     if (badge.isNotEmpty)
                       Container(
                         margin: const EdgeInsets.only(
@@ -719,7 +801,7 @@ class CategorySidebar extends StatelessWidget {
                         ),
                       ),
 
-                    // Logo SVG kategori
+                    // LOGO SVG KATEGORI
                     if (isSelected && logo.isNotEmpty)
                       Padding(
                         padding: const EdgeInsets.only(
@@ -730,16 +812,23 @@ class CategorySidebar extends StatelessWidget {
                           width: 30,
                           height: 25,
                           fit: BoxFit.contain,
-                          colorFilter: category['category'] == 'TOMORO SIGNATURE'
-                              ? const ColorFilter.mode(
-                                  Color.fromARGB(255, 255, 184, 103),
-                                  BlendMode.srcIn,
-                                )
-                              : null,
+                          colorFilter:
+                              category['category'] ==
+                                      'TOMORO SIGNATURE'
+                                  ? const ColorFilter.mode(
+                                      Color.fromARGB(
+                                        255,
+                                        255,
+                                        184,
+                                        103,
+                                      ),
+                                      BlendMode.srcIn,
+                                    )
+                                  : null,
                         ),
                       )
 
-                    // Icon berupa path SVG
+                    // ICON BERUPA PATH SVG
                     else if (isSelected &&
                         icon is String &&
                         icon.isNotEmpty)
@@ -755,7 +844,7 @@ class CategorySidebar extends StatelessWidget {
                         ),
                       )
 
-                    // Icon berupa Material Icon
+                    // ICON MATERIAL
                     else if (isSelected && icon is IconData)
                       Padding(
                         padding: const EdgeInsets.only(
@@ -768,12 +857,12 @@ class CategorySidebar extends StatelessWidget {
                         ),
                       ),
 
-                    // Nama kategori
+                    // NAMA KATEGORI
                     Text(
                       label,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 11,
+                        fontSize: 10,
                         height: 1.3,
                         fontWeight: isSelected
                             ? FontWeight.bold
@@ -795,23 +884,23 @@ class CategorySidebar extends StatelessWidget {
 }
 
 
+
 // ======================================================
 // CATEGORY SECTION
 // ======================================================
-
 
 class CategorySection extends StatelessWidget {
   final String title;
   final List<Map<String, String>> products;
   final ValueChanged<Map<String, String>>? onProductTap;
-  final bool isBanner;
+  final String? bannerImage;
 
   const CategorySection({
     super.key,
     required this.title,
     required this.products,
     this.onProductTap,
-    this.isBanner = false,
+    this.bannerImage,
   });
 
   @override
@@ -825,7 +914,7 @@ class CategorySection extends StatelessWidget {
           Text(
             title,
             style: const TextStyle(
-              fontSize: 18,
+              fontSize: 13,
               fontWeight: FontWeight.bold,
               color: Color(0xFF292929),
               letterSpacing: 0.2,
@@ -834,11 +923,34 @@ class CategorySection extends StatelessWidget {
 
           const SizedBox(height: 18),
 
-          // TAMPILAN MONTHLY PROMO
-          if (isBanner)
-            const BannerCarousel()
+          // GAMBAR BANNER STATIS
+          if (bannerImage != null && bannerImage!.isNotEmpty)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(
+                bannerImage!,
+                width: double.infinity,
+                height: 130,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    width: double.infinity,
+                    height: 130,
+                    color: const Color(0xFFF5F5F5),
+                    child: const Center(
+                      child: Icon(
+                        Icons.broken_image_outlined,
+                        size: 35,
+                        color: Color(0xFFCCCCCC),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            )
+
+          // DAFTAR PRODUK BIASA
           else
-            // DAFTAR PRODUK BIASA
             ...products.map(
               (product) => ProductCard(
                 name: product['name'] ?? '',
@@ -880,7 +992,7 @@ class ProductCard extends StatelessWidget {
 
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          vertical: 12,
+          vertical: 8,
         ),
 
         child: Row(
@@ -888,8 +1000,8 @@ class ProductCard extends StatelessWidget {
           children: [
             // GAMBAR PRODUK
             SizedBox(
-              width: 105,
-              height: 125,
+              width: 85,
+              height: 100,
               child: _NetworkImage(
                 imageUrl: imageUrl,
                 fit: BoxFit.contain,
@@ -907,8 +1019,8 @@ class ProductCard extends StatelessWidget {
                   Text(
                     name,
                     style: const TextStyle(
-                      fontSize: 16,
-                      color: Color(0xFF222222),
+                      fontSize: 12,
+                      color: Color.fromARGB(255, 51, 51, 51),
                       fontWeight: FontWeight.w400,
                     ),
                   ),
@@ -918,8 +1030,8 @@ class ProductCard extends StatelessWidget {
                   Text(
                     price,
                     style: const TextStyle(
-                      fontSize: 16,
-                      color: Color(0xFF222222),
+                      fontSize: 12,
+                      color: Color.fromARGB(255, 51, 51, 51),
                       fontWeight: FontWeight.w400,
                     ),
                   ),
@@ -929,7 +1041,7 @@ class ProductCard extends StatelessWidget {
 
             // TOMBOL PLUS VISUAL SAJA
             SizedBox(
-              height: 125,
+              height: 100,
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: const Padding(
