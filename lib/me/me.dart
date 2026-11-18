@@ -1,11 +1,9 @@
 import 'dart:math' as math;
-
 import '../auth/register.dart';
 import '../auth/login.dart';
 import '../database/database_helper.dart';
-
+import '../database/database_viewer.dart';
 import 'package:flutter/material.dart';
-
 import 'my_profile.dart';
 import 'settings.dart';
 
@@ -185,31 +183,35 @@ class MePage extends StatelessWidget {
     );
   }
 
-  void _open(BuildContext context, String title) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) {
-          if (title == 'Settings') {
-            return SettingsPage(
-              isLoggedIn: isLoggedIn,
-              user: currentUser,
-              onProfileUpdated: (updatedUser) {
-                onProfileUpdated?.call(updatedUser);
-              },
-              onLogout: () {
-                onLogout?.call();
-              },
-              onAccountDeleted: () {
-    onAccountDeleted?.call();
-  },
-            );
-          }
+ void _open(BuildContext context, String title) {
+  Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (_) {
+        if (title == 'Help Center') {
+          return const DatabaseViewerPage();
+        }
 
-          return SimplePage(title: title);
-        },
-      ),
-    );
-  }
+        if (title == 'Settings') {
+          return SettingsPage(
+            isLoggedIn: isLoggedIn,
+            user: currentUser,
+            onProfileUpdated: (updatedUser) {
+              onProfileUpdated?.call(updatedUser);
+            },
+            onLogout: () {
+              onLogout?.call();
+            },
+            onAccountDeleted: () {
+              onAccountDeleted?.call();
+            },
+          );
+        }
+
+        return SimplePage(title: title);
+      },
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
