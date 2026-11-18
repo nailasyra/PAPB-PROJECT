@@ -1,3 +1,4 @@
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -458,6 +459,7 @@ class ExploreMore extends StatelessWidget {
 // ==========================================
 // BANNER 1: MASTER S.O.E. SERIES
 // ==========================================
+
 class RecommendationClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
@@ -1107,7 +1109,6 @@ class MonthlyGiftContent extends StatelessWidget {
   }
 }
 
-
 // ==========================================
 // BAGIAN LANJUTAN HOME: LIMITED OFFERS
 // ==========================================
@@ -1115,25 +1116,10 @@ class MonthlyGiftContent extends StatelessWidget {
 class LimitedOffersSection extends StatelessWidget {
   const LimitedOffersSection({super.key});
 
-  static const List<Map<String, String>> offers = [
-    {
-      'image': 'assets/images/home/limited_friday_cup.jpg',
-      'title': 'FRIDAY DEAL',
-      'price': '22',
-      'oldPrice': '24',
-    },
-    {
-      'image': 'assets/images/home/limited_matcha_eclair.jpg',
-      'title': 'MATCHA ÉCLAIR',
-      'price': '20',
-      'oldPrice': '22',
-    },
-    {
-      'image': 'assets/images/home/limited_matcha_bagel.jpg',
-      'title': 'MATCHA RASPBERRY BAGEL',
-      'price': '22',
-      'oldPrice': '24',
-    },
+  static const List<String> offerImages = [
+    'assets/images/home/lo3.png',
+    'assets/images/home/lo2.png',
+    'assets/images/home/lo1.png',
   ];
 
   @override
@@ -1186,49 +1172,49 @@ class LimitedOffersSection extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           SizedBox(
-            height: 128,
+            height: 124,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
-              itemCount: offers.length + 1,
-              separatorBuilder: (context, index) =>
-                  const SizedBox(width: 9),
+              itemCount: offerImages.length + 1,
+              separatorBuilder: (context, index) => const SizedBox(width: 9),
               itemBuilder: (context, index) {
-                if (index == offers.length) {
-                  return Container(
-                    width: 88,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          size: 25,
-                          color: Color(0xFF999999),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          'See All',
-                          style: TextStyle(
-                            color: Color(0xFF555555),
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
+                if (index < offerImages.length) {
+                  return _LimitedOfferBanner(image: offerImages[index]);
                 }
 
-                final offer = offers[index];
-
-                return _LimitedOfferCard(
-                  image: offer['image']!,
-                  title: offer['title']!,
-                  price: offer['price']!,
-                  oldPrice: offer['oldPrice']!,
+                return Container(
+                  width: 88,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/images/icon/panahkanan.png',
+                        width: 48,
+                        height: 48,
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(
+                            Icons.image_not_supported,
+                            color: Colors.grey,
+                            size: 35,
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'See All',
+                        style: TextStyle(
+                          color: Color(0xFF555555),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               },
             ),
@@ -1239,25 +1225,17 @@ class LimitedOffersSection extends StatelessWidget {
   }
 }
 
-class _LimitedOfferCard extends StatelessWidget {
-  const _LimitedOfferCard({
-    required this.image,
-    required this.title,
-    required this.price,
-    required this.oldPrice,
-  });
+class _LimitedOfferBanner extends StatelessWidget {
+  const _LimitedOfferBanner({required this.image});
 
   final String image;
-  final String title;
-  final String price;
-  final String oldPrice;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 230,
+      width: 250,
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFCFC),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -1268,113 +1246,21 @@ class _LimitedOfferCard extends StatelessWidget {
         ],
       ),
       clipBehavior: Clip.antiAlias,
-      child: Column(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 5,
-              ),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 66,
-                    height: 68,
-                    child: Image.asset(
-                      image,
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Icon(
-                          Icons.image_not_supported_outlined,
-                          color: Colors.grey,
-                          size: 28,
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 9),
-                  Expanded(
-                    child: Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 1.1,
-                        color: Color(0xFF252525),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+      child: Image.asset(
+        image,
+        width: 250,
+        height: 124,
+        fit: BoxFit.cover,
+        alignment: Alignment.center,
+        errorBuilder: (context, error, stackTrace) {
+          return const Center(
+            child: Icon(
+              Icons.image_not_supported_outlined,
+              color: Colors.grey,
+              size: 30,
             ),
-          ),
-          Container(
-            height: 43,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: const BoxDecoration(
-              color: Color(0xFFFF5428),
-            ),
-            child: Row(
-              children: [
-                const Text(
-                  'Rp ',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 8,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  '${price}K',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 19,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-                const SizedBox(width: 5),
-                Text(
-                  '${oldPrice}K',
-                  style: const TextStyle(
-                    color: Color(0xFFFFD2C7),
-                    fontSize: 9,
-                    decoration: TextDecoration.lineThrough,
-                  ),
-                ),
-                const Spacer(),
-                InkWell(
-                  borderRadius: BorderRadius.circular(18),
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Fitur pembelian belum dihubungkan.'),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 13,
-                      vertical: 5,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(18),
-                    ),
-                    child: const Text(
-                      'BUY',
-                      style: TextStyle(
-                        color: Color(0xFFFF5428),
-                        fontSize: 9,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
@@ -1389,17 +1275,17 @@ class ForYouSection extends StatelessWidget {
 
   static const List<Map<String, String>> products = [
     {
-      'image': 'assets/images/home/foryou_americano.jpg',
+      'image': 'assets/images/home/for you1.png',
       'name': 'Master S.O.E\n- Americano',
       'price': 'Rp 30.000',
     },
     {
-      'image': 'assets/images/home/foryou_latte.jpg',
+      'image': 'assets/images/home/for you2.png',
       'name': 'Master S.O.E\n- Latte',
       'price': 'Rp 32.000',
     },
     {
-      'image': 'assets/images/home/foryou_breve_latte.jpg',
+      'image': 'assets/images/home/for you3.png',
       'name': 'Master S.O.E\n- Breve Latte',
       'price': 'Rp 37.000',
     },
@@ -1453,7 +1339,7 @@ class ForYouSection extends StatelessWidget {
                         height: 132,
                         child: Image.asset(
                           product['image']!,
-                          fit: BoxFit.cover,
+                          fit: BoxFit.contain,
                           errorBuilder: (context, error, stackTrace) {
                             return const ColoredBox(
                               color: Color(0xFFECECEC),
@@ -1515,113 +1401,141 @@ class MissionSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(14, 5, 14, 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Mission',
-            style: TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF222222),
+    const textDark = Color(0xFF202020);
+    const progressOrange = Color(0xFFFF9E00);
+    const buttonOrange = Color(0xFFEF602F);
+
+    const boldStyle = TextStyle(
+      fontFamily: 'HomeRubik',
+      fontWeight: FontWeight.w700,
+      color: textDark,
+      letterSpacing: 0,
+    );
+
+    return ColoredBox(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 16, 18, 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Mission',
+              style: boldStyle.copyWith(
+                fontSize: 17,
+                height: 1.2,
+                color: Colors.black,
+              ),
             ),
-          ),
-          const SizedBox(height: 13),
-          Row(
-            children: [
-              Image.asset(
-                'assets/images/home/mission_50_points.jpg',
-                width: 55,
-                height: 58,
-                fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) {
-                  return const SizedBox(
-                    width: 55,
-                    height: 58,
-                    child: Icon(
-                      Icons.workspace_premium_rounded,
-                      color: Color(0xFFFF8A00),
-                      size: 42,
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Complete personal information...',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF292929),
-                      ),
-                    ),
-                    const SizedBox(height: 9),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: const LinearProgressIndicator(
-                        value: 2 / 3,
-                        minHeight: 5,
-                        backgroundColor: Color(0xFFECECEC),
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          Color(0xFFFF8A00),
+            const SizedBox(height: 24),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/images/home/mission.png',
+                  width: 56,
+                  height: 56,
+                  fit: BoxFit.contain,
+                  semanticLabel: '50 Points',
+                ),
+                const SizedBox(width: 9),
+
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Complete personal information',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: boldStyle.copyWith(
+                          fontSize: 14,
+                          height: 1.2,
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 5),
-                    const Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        '2/3',
-                        style: TextStyle(
-                          color: Color(0xFFFF8A00),
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
-                        ),
+                      const SizedBox(height: 15),
+                      Row(
+                        children: [
+                          const Expanded(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8),
+                              ),
+                              child: LinearProgressIndicator(
+                                value: 2 / 3,
+                                minHeight: 7,
+                                backgroundColor: Color(0xFFF3F3F3),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  progressOrange,
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 14),
+                          Text.rich(
+                            TextSpan(
+                              children: const [
+                                TextSpan(
+                                  text: '2',
+                                  style: TextStyle(color: progressOrange),
+                                ),
+                                TextSpan(
+                                  text: '/3',
+                                  style: TextStyle(
+                                    color: Color(0xFF999999),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            style: boldStyle.copyWith(
+                              fontSize: 13,
+                              height: 1,
+                            ),
+                          ),
+                        ],
                       ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(width: 26),
+                OutlinedButton(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Halaman Mission belum dihubungkan.'),
+                      ),
+                    );
+                  },
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: buttonOrange,
+                    backgroundColor: Colors.white,
+                    fixedSize: const Size(51, 28),
+                    minimumSize: Size.zero,
+                    padding: EdgeInsets.zero,
+                    visualDensity: VisualDensity.standard,
+                    side: const BorderSide(
+                      color: buttonOrange,
+                      width: 1.4,
                     ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 12),
-              OutlinedButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Halaman Mission belum dihubungkan.'),
+                    shape: const StadiumBorder(),
+                  ),
+                  child: Text(
+                    'GO',
+                    style: boldStyle.copyWith(
+                      fontSize: 13,
+                      height: 1,
+                      color: buttonOrange,
                     ),
-                  );
-                },
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: const Color(0xFFFF5428),
-                  side: const BorderSide(
-                    color: Color(0xFFFF5428),
-                    width: 1.2,
-                  ),
-                  minimumSize: const Size(52, 32),
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(22),
                   ),
                 ),
-                child: const Text(
-                  'GO',
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -1653,24 +1567,7 @@ class TomoroHighlightSection extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(11),
             child: Image.asset(
-              'assets/images/home/tomoro_highlight_mont_blanc.jpg',
-              width: double.infinity,
-              fit: BoxFit.fitWidth,
-              errorBuilder: (context, error, stackTrace) {
-                return const SizedBox(
-                  height: 180,
-                  child: Center(
-                    child: Text('Gambar TOMORO Highlight tidak ditemukan'),
-                  ),
-                );
-              },
-            ),
-          ),
-          const SizedBox(height: 14),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(11),
-            child: Image.asset(
-              'assets/images/home/tomoro_highlight_about.jpg',
+              'assets/images/home/tomoro higlight.png',
               width: double.infinity,
               fit: BoxFit.fitWidth,
               errorBuilder: (context, error, stackTrace) {
