@@ -559,25 +559,32 @@ class _CreatePinPageState extends State<CreatePinPage> {
         return;
       }
 
-      final user = UserModel(
-        nickname: widget.nickname.trim(),
-        email: widget.email.trim(),
-        gender: widget.gender,
-        birthday: birthdayText,
-        pin: pinController.text,
-      );
+     final user = UserModel(
+  nickname: widget.nickname.trim(),
+  email: widget.email.trim(),
+  gender: widget.gender,
+  birthday: birthdayText,
+  pin: pinController.text,
+);
 
-      await DatabaseHelper.instance.insertUser(user);
+// Simpan akun dan ambil ID dari SQLite
+final insertedId =
+    await DatabaseHelper.instance.insertUser(user);
 
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Registrasi berhasil! Data berhasil disimpan.'),
-        ),
-      );
+// Buat UserModel baru yang sudah memiliki ID
+final registeredUser = UserModel(
+  id: insertedId,
+  nickname: user.nickname,
+  email: user.email,
+  gender: user.gender,
+  birthday: user.birthday,
+  pin: user.pin,
+);
 
-      // Kembalikan data pengguna ke RegisterPage, lalu ke MePage.
-      Navigator.pop(context, user);
+if (!mounted) return;
+
+// Kirim UserModel yang sudah memiliki ID
+Navigator.pop(context, registeredUser);
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
