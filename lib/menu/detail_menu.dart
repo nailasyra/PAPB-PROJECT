@@ -1,33 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// =====================================================================
-/// detail_menu.dart
-///
-/// SETUP (sekali saja):
-///   1. Jalankan di terminal project:  flutter pub add google_fonts
-///   2. Simpan file ini di  lib/detail_menu.dart
-///
-/// CARA PAKAI dari halaman menu (punya teman kamu):
-///   Saat item menu di-klik, cukup panggil:
-///
-///     import 'detail_menu.dart';
-///     ...
-///     onTap: () => DetailMenu.show(context, name: item.name),
-///
-///   - Kalau nama menu ada di katalog (lihat class MenuCatalog di bawah),
-///     opsi, harga, dan deskripsinya otomatis terisi.
-///   - Kalau namanya tidak ada di katalog, dipakai template minuman standar.
-///   - Gambar & harga bisa ditimpa:
-///       DetailMenu.show(context,
-///           name: item.name, imageUrl: item.imageUrl, basePrice: item.price);
-///
-///
-/// =====================================================================
-
-// ---------------------------------------------------------------------
-// Warna (diambil langsung dari piksel screenshot aplikasi asli)
-// ---------------------------------------------------------------------
 class _C {
   static const Color chipText = Color(0xFFD97601); // teks pilihan aktif
   static const Color chipBg = Color(0xFFFEF6EB); // bg pilihan aktif
@@ -48,8 +21,6 @@ class _C {
   static const Color recoBg = Color(0xFFFFF9F2);
 }
 
-/// Font mirip aplikasi asli (hasil perbandingan: Lexend).
-/// Kalau mau ganti font, cukup ubah di sini.
 TextStyle _font(
   double size, {
   FontWeight weight = FontWeight.w400,
@@ -102,8 +73,6 @@ class AddOnItem {
   const AddOnItem(this.name, this.price, {this.available = true});
 }
 
-/// Section add on tambahan (mis. "Add - Granola Topping") yang tampil
-/// sebelum group ke-[beforeGroup] (null = paling bawah).
 class AddOnSection {
   final String title;
   final List<AddOnItem> items;
@@ -179,24 +148,10 @@ class MenuDetailData {
   }
 }
 
-// ---------------------------------------------------------------------
-// KATALOG MENU
-// Tambah menu baru: salin salah satu blok MenuDetailData di _list,
-// lalu ubah nama, deskripsi, harga, dan opsinya.
-// ---------------------------------------------------------------------
 class MenuCatalog {
-  // GANTI dengan URL gambar kelompok kalian (atau kirim lewat parameter imageUrl)
   static const String _img =
       'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=600';
 
-  // ===================================================================
-  // >>> TEMPAT MENARUH LINK GAMBAR (dari Grab) <<<
-  //
-  // Isi link di antara tanda kutip, sesuai nama menunya.
-  // Dikosongkan ('') = pakai gambar placeholder.
-  //  - 'Caffe Americano' memakai gambar BANNER (lebar), bukan gambar gelas.
-  //  - Dua nama paling bawah adalah gambar bulat di bagian "Recommended".
-  // ===================================================================
   static const Map<String, String> imageLinks = {
     // --- Mont Blanc ---
     'Choco Mont Blanc': 'https://huawei-food-cms.grab.com/compressed_webp/items/url-509bfe3e/photo/798068eb0de594b.webp',
@@ -282,8 +237,6 @@ class MenuCatalog {
     AddOnItem('Manuka Honey Syrup', 5000, available: false),
   ];
 
-  /// Template minuman standar (CupSize kartu, Iced, Sweetness, Milk).
-  /// Dipakai Choco Mont Blanc dan untuk menu yang belum ada di katalog.
   static MenuDetailData standardDrink({
     required String name,
     required String description,
@@ -1043,10 +996,6 @@ class _DetailMenuState extends State<DetailMenu> {
     );
   }
 
-  // ----- Baris add on -----
-  // Dibuat mengikuti video: tinggi 40, jarak antar baris 10, nama & harga
-  // sejajar kiri (jarak 20), tombol +/- bulat berukuran 22 dengan garis tipis
-  // dan simbol tebal, angka jumlah di tengah (tanpa bold).
   Widget _buildAddOnRow(AddOnItem item) {
     final qty = _addOnQty[item.name] ?? 0;
     final limitReached =
@@ -1054,10 +1003,6 @@ class _DetailMenuState extends State<DetailMenu> {
     final canAdd = item.available && !limitReached;
     final textColor = item.available ? _C.body : _C.disabledText;
 
-    // Warna tombol +:
-    //  - aktif            -> oranye
-    //  - batas tercapai   -> oranye pudar
-    //  - menu tidak ada   -> abu pudar
     final Color plusColor = !item.available
         ? _C.plusUnavailable
         : limitReached
@@ -1074,8 +1019,6 @@ class _DetailMenuState extends State<DetailMenu> {
       ),
       child: Row(
         children: [
-          // Nama + harga ada di satu area yang mengisi sisa ruang,
-          // sehingga tombol +/- selalu menempel di kanan (tidak zigzag).
           Expanded(
             child: Row(
               children: [
@@ -1253,7 +1196,6 @@ class _DetailMenuState extends State<DetailMenu> {
             width: double.infinity,
             height: 49,
             child: ElevatedButton(
-              // Tombol hanya tampilan, belum ada fungsi (sesuai kesepakatan)
               onPressed: () {},
               style: ElevatedButton.styleFrom(
                 backgroundColor: _C.cta,
@@ -1277,11 +1219,6 @@ class _DetailMenuState extends State<DetailMenu> {
   }
 }
 
-// ---------------------------------------------------------------------
-// Komponen kecil
-// ---------------------------------------------------------------------
-
-/// Pasangan section add on + posisinya (dipakai internal)
 class _SectionRef {
   final String title;
   final List<AddOnItem> items;
@@ -1352,7 +1289,6 @@ class _CupCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Ukuran gelas makin besar sesuai urutan (Small < Medium < Jumbo)
-    // Ukuran ikon diukur dari screenshot asli (Small 23 x 30dp, Medium 23 x 32,5dp)
     final bool big = index >= 1;
     final Size size = big ? const Size(23.28, 32.54) : const Size(23.13, 30.15);
 
@@ -1393,10 +1329,6 @@ class _CupCard extends StatelessWidget {
   }
 }
 
-/// Gambar ikon gelas dengan kode (tanpa file gambar).
-/// Bentuknya diukur dari ikon asli aplikasi Tomoro:
-///  - tutup atas + bibir tutup + badan gelas yang menyempit ke bawah
-///  - logo kepala kucing: terisi oranye saat dipilih, garis tepi saat tidak
 class _CupPainter extends CustomPainter {
   final bool selected;
   final bool big; // false = Small, true = Medium
@@ -1406,7 +1338,6 @@ class _CupPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Semua koordinat di bawah dalam satuan piksel ikon asli lalu diskalakan.
     final double refW = big ? 156 : 155;
     final double refH = big ? 218 : 202;
     canvas.scale(size.width / refW, size.height / refH);
@@ -1531,9 +1462,6 @@ class _CupPainter extends CustomPainter {
 
 enum _AddOnSymbol { plus, minus }
 
-/// Tombol bulat + / - khusus baris add on.
-/// Garis lingkaran tipis, simbol di dalamnya tebal dan agak besar,
-/// ada efek sentuh biru muda berbentuk lingkaran seperti di aplikasi asli.
 class _AddOnButton extends StatelessWidget {
   final _AddOnSymbol symbol;
   final Color color;
@@ -1653,27 +1581,6 @@ class _RoundButton extends StatelessWidget {
   }
 }
 
-// ---------------------------------------------------------------------
-// HALAMAN PER MENU - widget yang bisa dipanggil dari file lain
-//
-// Contoh pemakaian di file menu teman:
-//
-//   // Cara 1 (paling singkat): tampil sebagai bottom sheet
-//   onTap: () => ChocoMontBlancPage.show(context),
-//
-//   // Cara 2: pakai widget-nya langsung di dalam bottom sheet
-//   onTap: () => showModalBottomSheet(
-//         context: context,
-//         isScrollControlled: true,
-//         backgroundColor: Colors.transparent,
-//         builder: (_) => const ChocoMontBlancPage(),
-//       ),
-//
-// Untuk menu yang belum punya kelas sendiri, pakai DetailMenuPage:
-//   DetailMenuPage.show(context, name: 'Nama Menu Lain');
-// ---------------------------------------------------------------------
-
-/// Mencari data menu di katalog; kalau tidak ada, pakai template standar.
 MenuDetailData _resolveMenuData({
   required String name,
   String? imageUrl,
@@ -1688,7 +1595,6 @@ MenuDetailData _resolveMenuData({
       basePrice: basePrice,
     );
   }
-  // Menu belum ada di katalog -> pakai template minuman standar
   return MenuCatalog.standardDrink(
     name: name,
     description: description ?? 'Deskripsi menu belum tersedia.',
@@ -1840,7 +1746,7 @@ class StrawberryJasmineSmoothiePage extends StatelessWidget {
       DetailMenu(data: _resolveMenuData(name: 'Strawberry Jasmine Smoothie'));
 }
 
-/// Halaman umum untuk menu apa pun (nama dikirim lewat parameter).
+
 class DetailMenuPage extends StatelessWidget {
   final String name;
   final String? imageUrl;
