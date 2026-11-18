@@ -52,8 +52,9 @@ class PromoCarousel extends StatefulWidget {
 class _PromoCarouselState extends State<PromoCarousel> {
   static const int initialPage = 10000;
 
-  final PageController _pageController =
-      PageController(initialPage: initialPage);
+  final PageController _pageController = PageController(
+    initialPage: initialPage,
+  );
 
   int currentPage = initialPage;
   int currentIndex = 0;
@@ -76,18 +77,15 @@ class _PromoCarouselState extends State<PromoCarousel> {
   void startAutoPlay() {
     _timer?.cancel();
 
-    _timer = Timer.periodic(
-      const Duration(seconds: 4),
-      (timer) {
-        if (!_pageController.hasClients) return;
+    _timer = Timer.periodic(const Duration(seconds: 4), (timer) {
+      if (!_pageController.hasClients) return;
 
-        _pageController.animateToPage(
-          currentPage + 1,
-          duration: const Duration(milliseconds: 1100),
-          curve: Curves.easeInOutCubic,
-        );
-      },
-    );
+      _pageController.animateToPage(
+        currentPage + 1,
+        duration: const Duration(milliseconds: 1100),
+        curve: Curves.easeInOutCubic,
+      );
+    });
   }
 
   void onPageChanged(int index) {
@@ -127,9 +125,7 @@ class _PromoCarouselState extends State<PromoCarousel> {
       width: double.infinity,
       height: 300,
       child: ClipRRect(
-        borderRadius: const BorderRadius.vertical(
-          bottom: Radius.circular(10),
-        ),
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(10)),
         child: Stack(
           children: [
             // BACKGROUND
@@ -139,10 +135,7 @@ class _PromoCarouselState extends State<PromoCarousel> {
                 switchInCurve: Curves.easeInOutCubic,
                 switchOutCurve: Curves.easeInOutCubic,
                 transitionBuilder: (child, animation) {
-                  return FadeTransition(
-                    opacity: animation,
-                    child: child,
-                  );
+                  return FadeTransition(opacity: animation, child: child);
                 },
                 child: Image.asset(
                   bannerImages[currentIndex],
@@ -175,23 +168,20 @@ class _PromoCarouselState extends State<PromoCarousel> {
               right: 20,
               bottom: 40,
               child: Row(
-                children: List.generate(
-                  bannerImages.length,
-                  (index) {
-                    return AnimatedContainer(
-                      duration: const Duration(milliseconds: 600),
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      width: currentIndex == index ? 18 : 5,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        color: currentIndex == index
-                            ? Colors.white
-                            : Colors.black26,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    );
-                  },
-                ),
+                children: List.generate(bannerImages.length, (index) {
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 600),
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    width: currentIndex == index ? 20 : 5,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: currentIndex == index
+                          ? Colors.white
+                          : Colors.black26,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  );
+                }),
               ),
             ),
           ],
@@ -209,7 +199,7 @@ class MemberPromoSection extends StatelessWidget {
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(horizontal: 18),
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.only(top: 15, bottom: 20, left: 20, right: 20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
@@ -228,64 +218,82 @@ class MemberPromoSection extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 5,
-                ),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF9E8C75),
-                  borderRadius: BorderRadius.circular(20),
+                  color: const Color.fromARGB(255, 243, 242, 241),
+                  borderRadius: BorderRadius.circular(25),
                 ),
-                child: const Text(
-                  'Lv.1',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                  ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Level
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 9,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF9E8C75),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: const Text(
+                        'Lv.1',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 9,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+
+                    // Cashback
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 7),
+                      child: Text(
+                        '5% Cashback',
+                        style: TextStyle(fontSize: 9, color: Color.fromARGB(255, 111, 110, 110)),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-
               const SizedBox(width: 7),
-
-              const Text(
-                '5% Cashback',
-                style: TextStyle(fontSize: 11, color: Color(0xFF777777)),
-              ),
 
               const Spacer(),
 
-              const Icon(
-                Icons.confirmation_num,
-                color: Color(0xFFFF5722),
-                size: 21,
+              Image.asset(
+                'assets/images/backgrounds/tiket.png',
+                width: 30,
+                height: 30,
+                fit: BoxFit.contain,
               ),
-
-              const SizedBox(width: 5),
 
               const Text(
                 '2',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+
+              const SizedBox(width: 12),
+
+              Image.asset(
+                'assets/images/backgrounds/koin.png',
+                width: 30,
+                height: 40,
+                fit: BoxFit.contain,
+              ),
+
+              const Text(
+                '0 ',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
               ),
 
-              const SizedBox(width: 16),
-
-              const Icon(
-                Icons.monetization_on,
-                color: Color(0xFFFFB000),
-                size: 21,
-              ),
-
-              const SizedBox(width: 5),
-
               const Text(
-                '0 pts',
+                'pts',
                 style: TextStyle(fontSize: 13, color: Colors.grey),
               ),
             ],
           ),
 
-          const SizedBox(height: 27),
+          const SizedBox(height: 15),
 
           // SECTION TITLE
           Row(
@@ -308,7 +316,7 @@ class MemberPromoSection extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: 13),
+          const SizedBox(height: 5),
 
           // PROMO IMAGES
           Row(
