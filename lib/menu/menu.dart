@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'detail_menu.dart';
 
 // ======================================================
 // MENU DATA
@@ -268,6 +269,22 @@ class _MenuPageState extends State<MenuPage> {
     _scrollController.addListener(_onScroll);
   }
 
+  void _openProductDetail(Map<String, String> product) {
+    final name = product['name'] ?? '';
+    if (name.isEmpty) return;
+
+    final priceText = product['price'] ?? '';
+    final priceDigits = priceText.replaceAll(RegExp(r'[^0-9]'), '');
+    final basePrice = int.tryParse(priceDigits);
+
+    DetailMenu.show(
+      context,
+      name: name,
+      imageUrl: product['image'],
+      basePrice: basePrice,
+    );
+  }
+
   // ====================================================
   // DETEKSI KATEGORI BERDASARKAN POSISI SCROLL
   // ====================================================
@@ -384,7 +401,7 @@ class _MenuPageState extends State<MenuPage> {
                                   key: sectionKeys[index],
                                   title: category['category'] as String,
                                   products: products,
-                                  onProductTap: widget.onProductTap,
+                                  onProductTap: widget.onProductTap ?? _openProductDetail,
                                   bannerImage: category['banner'] as String?,
                                 );
                               },
@@ -750,7 +767,7 @@ class _CategorySidebarState extends State<CategorySidebar> {
             child: Container(
               width: double.infinity,
               constraints: const BoxConstraints(
-                minHeight: 112,
+                minHeight: 80,
               ),
               decoration: BoxDecoration(
                 color: isSelected
@@ -768,39 +785,43 @@ class _CategorySidebarState extends State<CategorySidebar> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 4,
-                  vertical: 10,
+                  vertical: 6,
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // BADGE KATEGORI
                     if (badge.isNotEmpty)
-                      Container(
-                        margin: const EdgeInsets.only(
-                          bottom: 6,
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 3,
-                        ),
-                        decoration: const BoxDecoration(
-                          color: Color(0xFFE99A32),
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(15),
-                            topRight: Radius.circular(15),
-                            bottomRight: Radius.circular(15),
+                      Align(
+                        alignment: badge == 'NEW'
+                            ? Alignment.centerRight
+                            : Alignment.center,
+                        child: Container(
+                          margin: const EdgeInsets.only(
+                            bottom: 6,
                           ),
-                        ),
-                        child: Text(
-                          badge,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 8,
-                            fontWeight: FontWeight.bold,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 5,
+                            vertical: 1.5,
+                          ),
+                          decoration: const BoxDecoration(
+                            color: Color.fromARGB(255, 233, 129, 32),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(15),
+                              topRight: Radius.circular(15),
+                              bottomRight: Radius.circular(15),
+                            ),
+                          ),
+                          child: Text(
+                            badge,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 7,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
-
                     // LOGO SVG KATEGORI
                     if (isSelected && logo.isNotEmpty)
                       Padding(
@@ -862,7 +883,7 @@ class _CategorySidebarState extends State<CategorySidebar> {
                       label,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 10,
+                        fontSize: 9,
                         height: 1.3,
                         fontWeight: isSelected
                             ? FontWeight.bold
