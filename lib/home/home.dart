@@ -702,7 +702,7 @@ class GrandOpeningContent extends StatelessWidget {
             Positioned(
               top: height * 0.16,
               left: width * 0.48,
-              height: height * 0.48,
+              height: height * 0.25,
               child: Container(
                 width: 1,
                 color: Colors.white70,

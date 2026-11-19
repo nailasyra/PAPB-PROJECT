@@ -1,25 +1,66 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class MyQrCodePage extends StatelessWidget {
-  const MyQrCodePage({super.key});
+class MyQrCodePage extends StatefulWidget {
+  final bool isActive;
+  final VoidCallback onBack;
+
+  const MyQrCodePage({
+    super.key,
+    required this.isActive,
+    required this.onBack,
+  });
 
   static const Color tomoroOrange = Color(0xFFFF582E);
   static const Color badgeTaupe = Color.fromARGB(255, 126, 106, 86);
   static const Color badgeFoldShadow = Color(0xFF7A6D60);
 
   @override
-  Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.light,
-        statusBarBrightness: Brightness.dark,
-      ),
+  State<MyQrCodePage> createState() => _MyQrCodePageState();
+}
+
+class _MyQrCodePageState extends State<MyQrCodePage> {
+
+  @override
+  void initState() {
+    super.initState();
+    _updateFullscreen();
+  }
+
+  @override
+  void didUpdateWidget(covariant MyQrCodePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.isActive != widget.isActive) {
+      _updateFullscreen();
+    }
+  }
+
+  void _updateFullscreen() {
+    if (widget.isActive) {
+      SystemChrome.setEnabledSystemUIMode(
+        SystemUiMode.immersiveSticky,
+      );
+    } else {
+      SystemChrome.setEnabledSystemUIMode(
+        SystemUiMode.edgeToEdge,
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.edgeToEdge,
     );
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
 
     return Scaffold(
-      backgroundColor: tomoroOrange,
+      backgroundColor: MyQrCodePage.tomoroOrange,
       body: LayoutBuilder(
         builder: (context, constraints) {
           final screenWidth = constraints.maxWidth;
@@ -52,7 +93,7 @@ class MyQrCodePage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
-                      onPressed: () => Navigator.maybePop(context),
+                      onPressed: widget.onBack,
                       icon: const Icon(
                         Icons.arrow_back_ios_new_rounded,
                         color: Colors.white,
@@ -208,7 +249,7 @@ class MyQrCodePage extends StatelessWidget {
                   clipper: LevelRibbonClipper(),
                   child: Container(
                     decoration: const BoxDecoration(
-                      color: badgeTaupe,
+                      color: MyQrCodePage.badgeTaupe,
                     ),
                     alignment: const Alignment(0, -0.05),
                     child: const Text(

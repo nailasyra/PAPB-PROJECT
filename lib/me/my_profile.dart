@@ -42,6 +42,42 @@ class _MyProfilePageState extends State<MyProfilePage> {
     }
   }
 
+  void showCenterToast(BuildContext context, String message) {
+    final overlay = Overlay.of(context);
+
+    late OverlayEntry entry;
+
+    entry = OverlayEntry(
+      builder: (context) => Center(
+        child: Material(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 45, 44, 44),
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.15),
+                  blurRadius: 10,
+                ),
+              ],
+            ),
+            child: Text(
+              message,
+              style: const TextStyle(color: Color.fromARGB(221, 244, 242, 242)),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    overlay.insert(entry);
+
+    Future.delayed(const Duration(seconds: 2), () {
+      entry.remove();
+    });
+  }
+
   @override
   void dispose() {
     nicknameController.dispose();
@@ -212,8 +248,6 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     const SizedBox(height: 60),
 
                     _selectionField(birthday, color: Colors.grey),
-
-                   
                   ],
                 ),
               ),
@@ -226,47 +260,45 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 height: 65,
                 child: ElevatedButton(
                   onPressed: () async {
-  final updatedUser = UserModel(
-    id: widget.user.id,
-    nickname: nicknameController.text.trim(),
-    email: emailController.text.trim(),
-    gender: gender.isEmpty ? null : gender,
-    birthday: widget.user.birthday,
-    pin: widget.user.pin,
-  );
+                    final updatedUser = UserModel(
+                      id: widget.user.id,
+                      nickname: nicknameController.text.trim(),
+                      email: emailController.text.trim(),
+                      gender: gender.isEmpty ? null : gender,
+                      birthday: widget.user.birthday,
+                      pin: widget.user.pin,
+                    );
 
-  if (updatedUser.nickname.isEmpty ||
-      updatedUser.email.isEmpty) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Nick Name dan Email wajib diisi.'),
-      ),
-    );
-    return;
-  }
+                    if (updatedUser.nickname.isEmpty ||
+                        updatedUser.email.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Nick Name dan Email wajib diisi.'),
+                        ),
+                      );
+                      return;
+                    }
 
-  try {
-    await DatabaseHelper.instance.updateUser(updatedUser);
+                    try {
+                      await DatabaseHelper.instance.updateUser(updatedUser);
 
-    if (!mounted) return;
+                      if (!mounted) return;
 
-    Navigator.pop(context, updatedUser);
+                      Navigator.pop(context, updatedUser);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Profile berhasil diperbarui!'),
-      ),
-    );
-  } catch (e) {
-    if (!mounted) return;
+                      showCenterToast(context, 'Successfully saved');
+                    } catch (e) {
+                      if (!mounted) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Email sudah digunakan oleh akun lain.'),
-      ),
-    );
-  }
-},
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'Email sudah digunakan oleh akun lain.',
+                          ),
+                        ),
+                      );
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFEF653B),
                     foregroundColor: Colors.white,
