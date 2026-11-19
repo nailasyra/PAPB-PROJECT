@@ -1,4 +1,4 @@
-
+import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'database/database_viewer.dart';
@@ -88,7 +88,7 @@ class TomoroApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         scaffoldBackgroundColor: const Color(0xFFF8F8F8),
-        fontFamily: 'Roboto',
+         fontFamily: GoogleFonts.montserrat().fontFamily,
       ),
       home: const MainNavigation(),
     );
