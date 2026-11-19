@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,10 @@ class HomePage extends StatelessWidget {
               PromoCarousel(),
               TransformMemberSection(),
               ExploreMore(),
+              LimitedOffersSection(),
+              ForYouSection(),
+              MissionSection(),
+              TomoroHighlightSection(),
             ],
           ),
         ),
@@ -454,6 +459,7 @@ class ExploreMore extends StatelessWidget {
 // ==========================================
 // BANNER 1: MASTER S.O.E. SERIES
 // ==========================================
+
 class RecommendationClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
@@ -1099,6 +1105,483 @@ class MonthlyGiftContent extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+}
+
+// ==========================================
+// BAGIAN LANJUTAN HOME: LIMITED OFFERS
+// ==========================================
+
+class LimitedOffersSection extends StatelessWidget {
+  const LimitedOffersSection({super.key});
+
+  static const List<String> offerImages = [
+    'assets/images/home/lo3.png',
+    'assets/images/home/lo2.png',
+    'assets/images/home/lo1.png',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 14, top: 10, bottom: 18),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Text(
+                'Limited Offers',
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF222222),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFEEEE),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Row(
+                  children: [
+                    Icon(
+                      Icons.access_time_filled,
+                      size: 12,
+                      color: Color(0xFFFF5428),
+                    ),
+                    SizedBox(width: 4),
+                    Text(
+                      '18 : 43 : 56',
+                      style: TextStyle(
+                        color: Color(0xFFFF5428),
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            height: 124,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: offerImages.length + 1,
+              separatorBuilder: (context, index) => const SizedBox(width: 9),
+              itemBuilder: (context, index) {
+                if (index < offerImages.length) {
+                  return _LimitedOfferBanner(image: offerImages[index]);
+                }
+
+                return Container(
+                  width: 88,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/images/icon/panahkanan.png',
+                        width: 48,
+                        height: 48,
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(
+                            Icons.image_not_supported,
+                            color: Colors.grey,
+                            size: 35,
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'See All',
+                        style: TextStyle(
+                          color: Color(0xFF555555),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LimitedOfferBanner extends StatelessWidget {
+  const _LimitedOfferBanner({required this.image});
+
+  final String image;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 250,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.035),
+            blurRadius: 7,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Image.asset(
+        image,
+        width: 250,
+        height: 124,
+        fit: BoxFit.cover,
+        alignment: Alignment.center,
+        errorBuilder: (context, error, stackTrace) {
+          return const Center(
+            child: Icon(
+              Icons.image_not_supported_outlined,
+              color: Colors.grey,
+              size: 30,
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+// ==========================================
+// BAGIAN LANJUTAN HOME: FOR YOU
+// ==========================================
+
+class ForYouSection extends StatelessWidget {
+  const ForYouSection({super.key});
+
+  static const List<Map<String, String>> products = [
+    {
+      'image': 'assets/images/home/for you1.png',
+      'name': 'Master S.O.E\n- Americano',
+      'price': 'Rp 30.000',
+    },
+    {
+      'image': 'assets/images/home/for you2.png',
+      'name': 'Master S.O.E\n- Latte',
+      'price': 'Rp 32.000',
+    },
+    {
+      'image': 'assets/images/home/for you3.png',
+      'name': 'Master S.O.E\n- Breve Latte',
+      'price': 'Rp 37.000',
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 14, top: 3, bottom: 18),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'For You',
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF222222),
+            ),
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            height: 235,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: products.length,
+              separatorBuilder: (context, index) =>
+                  const SizedBox(width: 13),
+              itemBuilder: (context, index) {
+                final product = products[index];
+
+                return Container(
+                  width: 140,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFFDFF),
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.025),
+                        blurRadius: 5,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 140,
+                        height: 132,
+                        child: Image.asset(
+                          product['image']!,
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const ColoredBox(
+                              color: Color(0xFFECECEC),
+                              child: Center(
+                                child: Icon(
+                                  Icons.local_cafe_outlined,
+                                  color: Colors.grey,
+                                  size: 35,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(11, 8, 8, 0),
+                        child: Text(
+                          product['name']!,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            height: 1.25,
+                            color: Color(0xFF292929),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(11, 0, 8, 12),
+                        child: Text(
+                          product['price']!,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Color(0xFF222222),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ==========================================
+// BAGIAN LANJUTAN HOME: MISSION
+// ==========================================
+
+class MissionSection extends StatelessWidget {
+  const MissionSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    const textDark = Color(0xFF202020);
+    const progressOrange = Color(0xFFFF9E00);
+    const buttonOrange = Color(0xFFEF602F);
+
+    const boldStyle = TextStyle(
+      fontFamily: 'HomeRubik',
+      fontWeight: FontWeight.w700,
+      color: textDark,
+      letterSpacing: 0,
+    );
+
+    return ColoredBox(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 16, 18, 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Mission',
+              style: boldStyle.copyWith(
+                fontSize: 17,
+                height: 1.2,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(height: 24),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/images/home/mission.png',
+                  width: 56,
+                  height: 56,
+                  fit: BoxFit.contain,
+                  semanticLabel: '50 Points',
+                ),
+                const SizedBox(width: 9),
+
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Complete personal information',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: boldStyle.copyWith(
+                          fontSize: 14,
+                          height: 1.2,
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                      Row(
+                        children: [
+                          const Expanded(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8),
+                              ),
+                              child: LinearProgressIndicator(
+                                value: 2 / 3,
+                                minHeight: 7,
+                                backgroundColor: Color(0xFFF3F3F3),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  progressOrange,
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 14),
+                          Text.rich(
+                            TextSpan(
+                              children: const [
+                                TextSpan(
+                                  text: '2',
+                                  style: TextStyle(color: progressOrange),
+                                ),
+                                TextSpan(
+                                  text: '/3',
+                                  style: TextStyle(
+                                    color: Color(0xFF999999),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            style: boldStyle.copyWith(
+                              fontSize: 13,
+                              height: 1,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(width: 26),
+                OutlinedButton(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Halaman Mission belum dihubungkan.'),
+                      ),
+                    );
+                  },
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: buttonOrange,
+                    backgroundColor: Colors.white,
+                    fixedSize: const Size(51, 28),
+                    minimumSize: Size.zero,
+                    padding: EdgeInsets.zero,
+                    visualDensity: VisualDensity.standard,
+                    side: const BorderSide(
+                      color: buttonOrange,
+                      width: 1.4,
+                    ),
+                    shape: const StadiumBorder(),
+                  ),
+                  child: Text(
+                    'GO',
+                    style: boldStyle.copyWith(
+                      fontSize: 13,
+                      height: 1,
+                      color: buttonOrange,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ==========================================
+// BAGIAN LANJUTAN HOME: TOMORO HIGHLIGHT
+// ==========================================
+
+class TomoroHighlightSection extends StatelessWidget {
+  const TomoroHighlightSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(14, 2, 14, 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'TOMORO Highlight',
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF222222),
+            ),
+          ),
+          const SizedBox(height: 13),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(11),
+            child: Image.asset(
+              'assets/images/home/tomoro higlight.png',
+              width: double.infinity,
+              fit: BoxFit.fitWidth,
+              errorBuilder: (context, error, stackTrace) {
+                return const SizedBox(
+                  height: 180,
+                  child: Center(
+                    child: Text('Gambar TOMORO Highlight tidak ditemukan'),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
