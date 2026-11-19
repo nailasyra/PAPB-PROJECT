@@ -1,7 +1,10 @@
-
 import 'dart:async';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'dart:math';
+import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -251,7 +254,10 @@ class MemberPromoSection extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: 7),
                       child: Text(
                         '5% Cashback',
-                        style: TextStyle(fontSize: 9, color: Color.fromARGB(255, 111, 110, 110)),
+                        style: TextStyle(
+                          fontSize: 9,
+                          color: Color.fromARGB(255, 111, 110, 110),
+                        ),
                       ),
                     ),
                   ],
@@ -637,48 +643,51 @@ class GrandOpeningContent extends StatelessWidget {
 
         return Stack(
           children: [
-            // GRAND OPENING - BAGIAN KIRI
+            // LEFT: GRAND OPENING
             Positioned(
-              top: height * 0.13,
-              left: width * 0.10,
-              width: width * 0.38,
+              top: height * 0.12,
+              left: width * 0.06,
+              width: width * 0.40,
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
+                  Text(
                     'GRAND',
-                    style: TextStyle(
+                    style: GoogleFonts.montserrat(
                       color: Colors.white,
-                      fontSize: 20,
+                      fontSize: 21,
                       fontWeight: FontWeight.w900,
-                      height: 1,
+                      height: 0.95,
                     ),
                   ),
-                  const Text(
+                  Text(
                     'OPENING',
-                    style: TextStyle(
+                    style: GoogleFonts.montserrat(
                       color: Colors.white,
-                      fontSize: 20,
+                      fontSize: 21,
                       fontWeight: FontWeight.w900,
-                      height: 1,
+                      height: 0.95,
                     ),
                   ),
 
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 6),
 
                   Container(
+                    width: width * 0.37,
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 15,
                       vertical: 5,
+                      horizontal: 8,
                     ),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(25),
+                      borderRadius: BorderRadius.circular(30),
                     ),
-                    child: const FittedBox(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
                       child: Text(
                         'HELLO BENGKONG',
-                        style: TextStyle(
-                          color: Color(0xFFFF5428),
+                        style: GoogleFonts.montserrat(
+                          color: const Color(0xFFFF5428),
                           fontSize: 10,
                           fontWeight: FontWeight.w900,
                         ),
@@ -689,71 +698,84 @@ class GrandOpeningContent extends StatelessWidget {
               ),
             ),
 
-            // GARIS PEMISAH
+            // DIVIDER
             Positioned(
               top: height * 0.16,
-              left: width * 0.50,
-              height: height * 0.23,
-              child: Container(width: 1, color: Colors.white70),
+              left: width * 0.48,
+              height: height * 0.48,
+              child: Container(
+                width: 1,
+                color: Colors.white70,
+              ),
             ),
 
-            // TANGGAL DAN LOKASI - BAGIAN KANAN
+            // RIGHT: DATE & LOCATION
             Positioned(
-              top: height * 0.15,
-              left: width * 0.55,
-              right: width * 0.06,
+              top: height * 0.13,
+              left: width * 0.51,
+              right: width * 0.04,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const FittedBox(
+                  // DATE
+                  FittedBox(
                     fit: BoxFit.scaleDown,
-                    alignment: Alignment.centerLeft,
                     child: Text(
                       '07.11.2026',
-                      style: TextStyle(
+                      style: GoogleFonts.montserrat(
                         color: Colors.white,
-                        fontSize: 20,
+                        fontSize: 21,
                         fontWeight: FontWeight.w900,
+                        height: 1,
                       ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 0),
-
-                  const FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'SATURDAY · 9:00 WIB',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 0),
-
-                  const Text(
-                    'TOMORO COFFEE, Golden City Bengkong',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 7,
-                      fontWeight: FontWeight.bold,
                     ),
                   ),
 
                   const SizedBox(height: 3),
 
-                  const Text(
-                    'JL Golden Prawn Kecamatan, RT.005/RW.16, '
-                    'Tj. Buntung,\n'
-                    'Kec. Bengkong, Kota Batam, Kepulauan Riau 29432',
-                    style: TextStyle(
+                  // DAY & TIME - FORCE ONE LINE
+                  SizedBox(
+                    width: double.infinity,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        'SATURDAY · 9:00 WIB',
+                        style: GoogleFonts.montserrat(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 5),
+
+                  // LOCATION
+                  Text(
+                    'TOMORO COFFEE, Golden City Bengkong',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.montserrat(
+                      color: Colors.white,
+                      fontSize: 7.5,
+                      fontWeight: FontWeight.w800,
+                      height: 1.1,
+                    ),
+                  ),
+
+                  const SizedBox(height: 2),
+
+                  // ADDRESS
+                  Text(
+                    'Jl. Golden Prawn, Tj. Buntung, Bengkong, '
+                    'Kota Batam, Kepulauan Riau 29432',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.montserrat(
                       color: Colors.white,
                       fontSize: 6,
-                      height: 1.3,
+                      fontWeight: FontWeight.w500,
+                      height: 1.05,
                     ),
                   ),
                 ],
@@ -765,6 +787,9 @@ class GrandOpeningContent extends StatelessWidget {
     );
   }
 }
+// ==========================================
+// BANNER 3 : EGG TART
+// ==========================================
 
 class EggTartContent extends StatelessWidget {
   const EggTartContent({super.key});
@@ -778,110 +803,123 @@ class EggTartContent extends StatelessWidget {
 
         return Stack(
           children: [
-            // JUDUL EGG TART BUNDLES
+            // ==========================================
+            // JUDUL
+            // ==========================================
             Positioned(
-              top: height * 0.15,
+              top: height * 0.12,
               left: 0,
               right: 0,
-              child: const Center(
+              child: Center(
                 child: Text(
                   'EGG TART BUNDLES',
-                  style: TextStyle(
+                  style: GoogleFonts.outfit(
                     color: Colors.black,
                     fontSize: 15,
                     fontWeight: FontWeight.w900,
-                    letterSpacing: -0.5,
+                    letterSpacing: -0.4,
                   ),
                 ),
               ),
             ),
 
+            // ==========================================
             // PANEL PROMO
+            // ==========================================
             Positioned(
-              top: height * 0.245,
-              left: width * 0.19,
-              right: width * 0.19,
-              height: height * 0.30,
+              top: height * 0.23,
+              left: width * 0.12,
+              right: width * 0.12,
+              height: height * 0.27,
               child: Container(
                 decoration: BoxDecoration(
                   color: const Color(0xFFEBDCC9),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(22),
                 ),
                 child: Row(
                   children: [
                     // PROMO KIRI
                     Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text(
-                            'BELI 2\nEGG TART',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w900,
-                              height: 1.05,
-                            ),
-                          ),
-
-                          const Text(
-                            'mulai dari',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 7,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-
-                          RichText(
-                            text: const TextSpan(
-                              style: TextStyle(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 3,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'BELI 2\nEGG TART',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.outfit(
                                 color: Colors.black,
+                                fontSize: 11,
                                 fontWeight: FontWeight.w900,
+                                height: 1.0,
                               ),
-                              children: [
-                                TextSpan(
-                                  text: '35',
-                                  style: TextStyle(fontSize: 32),
-                                ),
-                                TextSpan(
-                                  text: 'K',
-                                  style: TextStyle(fontSize: 15),
-                                ),
-                              ],
                             ),
-                          ),
 
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5),
-                            child: Text(
+                            Text(
+                              'mulai dari',
+                              style: GoogleFonts.outfit(
+                                color: Colors.black,
+                                fontSize: 7,
+                                fontWeight: FontWeight.w600,
+                                height: 1.0,
+                              ),
+                            ),
+
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: '35',
+                                    style: GoogleFonts.outfit(
+                                      color: Colors.black,
+                                      fontSize: 34,
+                                      fontWeight: FontWeight.w900,
+                                      height: 1,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: 'K',
+                                    style: GoogleFonts.outfit(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w900,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            Text(
                               'Untuk pembelian di aplikasi TOMORO COFFEE',
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: GoogleFonts.outfit(
                                 color: Colors.black,
-                                fontSize: 4,
-                                fontWeight: FontWeight.bold,
+                                fontSize: 5,
+                                fontWeight: FontWeight.w600,
+                                height: 1.0,
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
 
-                    // GARIS PEMISAH
-                    Container(
-                      width: 2,
+                    // GARIS DOTTED
+                    SizedBox(
+                      width: 5,
                       height: double.infinity,
-                      margin: const EdgeInsets.symmetric(vertical: 5),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: List.generate(
-                          9,
+                          10,
                           (index) => Container(
-                            width: 4,
-                            height: 4,
+                            width: 3,
+                            height: 3,
                             decoration: const BoxDecoration(
                               color: Colors.white,
                               shape: BoxShape.circle,
@@ -893,61 +931,72 @@ class EggTartContent extends StatelessWidget {
 
                     // PROMO KANAN
                     Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text(
-                            'EGG TART',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w900,
-                            ),
-                          ),
-
-                          const Text(
-                            'mulai dari',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 7,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-
-                          RichText(
-                            text: const TextSpan(
-                              style: TextStyle(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 3,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'EGG TART',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.outfit(
                                 color: Colors.black,
+                                fontSize: 11,
                                 fontWeight: FontWeight.w900,
+                                height: 1.0,
                               ),
-                              children: [
-                                TextSpan(
-                                  text: '15',
-                                  style: TextStyle(fontSize: 32),
-                                ),
-                                TextSpan(
-                                  text: 'K',
-                                  style: TextStyle(fontSize: 15),
-                                ),
-                              ],
                             ),
-                          ),
 
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5),
-                            child: Text(
+                            Text(
+                              'mulai dari',
+                              style: GoogleFonts.outfit(
+                                color: Colors.black,
+                                fontSize: 7,
+                                fontWeight: FontWeight.w600,
+                                height: 1.0,
+                              ),
+                            ),
+
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: '15',
+                                    style: GoogleFonts.outfit(
+                                      color: Colors.black,
+                                      fontSize: 34,
+                                      fontWeight: FontWeight.w900,
+                                      height: 1,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: 'K',
+                                    style: GoogleFonts.outfit(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w900,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            Text(
                               'Dengan pembelian minuman apa pun',
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: GoogleFonts.outfit(
                                 color: Colors.black,
-                                fontSize: 4,
-                                fontWeight: FontWeight.bold,
+                                fontSize: 5,
+                                fontWeight: FontWeight.w600,
+                                height: 1.0,
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -955,36 +1004,42 @@ class EggTartContent extends StatelessWidget {
               ),
             ),
 
-            // KETERANGAN PROMO
+            // ==========================================
+            // DISCLAIMER
+            // ==========================================
             Positioned(
               left: width * 0.06,
-              bottom: height * 0.055,
-              child: const Column(
+              bottom: height * 0.045,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     '* Selama persediaan masih ada.',
-                    style: TextStyle(
+                    style: GoogleFonts.outfit(
                       color: Colors.black,
-                      fontSize: 5,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 5.5,
+                      fontWeight: FontWeight.w500,
+                      height: 1.1,
                     ),
                   ),
                   Text(
                     '* Syarat dan ketentuan berlaku.',
-                    style: TextStyle(
+                    style: GoogleFonts.outfit(
                       color: Colors.black,
-                      fontSize: 5,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 5.5,
+                      fontWeight: FontWeight.w500,
+                      height: 1.1,
                     ),
                   ),
                   Text(
                     '* Gambar produk hanya sebagai referensi, '
                     'silakan merujuk pada produk yang sebenarnya.',
-                    style: TextStyle(
+                    style: GoogleFonts.outfit(
                       color: Colors.black,
-                      fontSize: 5,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 5.5,
+                      fontWeight: FontWeight.w500,
+                      height: 1.1,
                     ),
                   ),
                 ],
@@ -1013,34 +1068,39 @@ class MonthlyGiftContent extends StatelessWidget {
 
         return Stack(
           children: [
+            // ==========================================
             // MONTHLY MEMBER GIFT
+            // ==========================================
             Positioned(
               top: height * 0.16,
               left: 0,
               right: 0,
-              child: const Center(
+              child: Center(
                 child: Text(
                   '— Monthly Member Gift —',
-                  style: TextStyle(
-                    color: Color(0xFF211D1D),
-                    fontSize: 15,
-                    fontWeight: FontWeight.w900,
+                  style: GoogleFonts.outfit(
+                    color: const Color(0xFF211D1D),
+                    fontSize: width * 0.038,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.3,
                   ),
                 ),
               ),
             ),
 
-            // TULISAN DISKON
+            // ==========================================
+            // DISKON
+            // ==========================================
             Positioned(
               top: height * 0.23,
               left: 0,
               right: 0,
-              child: const Center(
+              child: Center(
                 child: Text(
                   'Diskon',
-                  style: TextStyle(
-                    color: Color(0xFF211D1D),
-                    fontSize: 43,
+                  style: GoogleFonts.outfit(
+                    color: const Color(0xFF211D1D),
+                    fontSize: width * 0.115,
                     fontWeight: FontWeight.w900,
                     height: 1,
                     letterSpacing: -1,
@@ -1048,56 +1108,68 @@ class MonthlyGiftContent extends StatelessWidget {
                 ),
               ),
             ),
-
+            // ==========================================
             // ANGKA 10
+            // ==========================================
             Positioned(
-              top: height * 0.32,
-              left: width * 0.27,
-              child: const Text(
-                '10',
-                style: TextStyle(
-                  color: Color(0xFF211D1D),
-                  fontSize: 110,
-                  fontWeight: FontWeight.w900,
-                  height: 0.95,
-                  letterSpacing: -8,
+              top: height * 0.36,
+              left: width * 0.23,
+              width: width * 0.52,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.center,
+                child: Text(
+                  '10',
+                  style: GoogleFonts.archivo(
+                    color: const Color(0xFF211D1D),
+                    fontSize: width * 0.29,
+                    fontWeight: FontWeight.w900,
+                    height: 0.85,
+                    letterSpacing: -width * 0.02,
+                  ),
                 ),
               ),
             ),
 
-            // SIMBOL PERSEN
+            // ==========================================
+            // BADGE %
+            // ==========================================
             Positioned(
               top: height * 0.47,
-              left: width * 0.60,
-              child: Container(
-                width: 40,
-                height: 40,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFFF5428),
-                  shape: BoxShape.circle,
-                ),
-                child: const Center(
-                  child: Text(
-                    '%',
-                    style: TextStyle(
-                      color: Color(0xFF211D1D),
-                      fontSize: 25,
-                      fontWeight: FontWeight.w900,
+              left: width * 0.63,
+              child: SizedBox(
+                width: width * 0.105,
+                height: width * 0.105,
+                child: ClipPath(
+                  clipper: BurstBadgeClipper(),
+                  child: Container(
+                    color: const Color(0xFFFF5428),
+                    child: Center(
+                      child: Text(
+                        '%',
+                        style: GoogleFonts.outfit(
+                          color: const Color(0xFF211D1D),
+                          fontSize: width * 0.065,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
 
+            // ==========================================
             // SYARAT DAN KETENTUAN
+            // ==========================================
             Positioned(
               left: width * 0.07,
               bottom: height * 0.055,
-              child: const Text(
+              child: Text(
                 '* Syarat dan ketentuan berlaku.',
-                style: TextStyle(
-                  color: Color(0xFF211D1D),
-                  fontSize: 7,
+                style: GoogleFonts.outfit(
+                  color: const Color(0xFF211D1D),
+                  fontSize: width * 0.018,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -1107,6 +1179,43 @@ class MonthlyGiftContent extends StatelessWidget {
       },
     );
   }
+}
+
+// ==========================================
+// CUSTOM SHAPE BADGE PERSEN
+// ==========================================
+
+class BurstBadgeClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    const points = 24;
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = size.width / 2;
+
+    final path = Path();
+
+    for (int i = 0; i < points; i++) {
+      final angle = (i * 2 * 3.141592653589793 / points) -
+          3.141592653589793 / 2;
+
+      final currentRadius = i.isEven ? radius : radius * 0.88;
+
+      final x = center.dx + currentRadius * cos(angle);
+      final y = center.dy + currentRadius * sin(angle);
+
+      if (i == 0) {
+        path.moveTo(x, y);
+      } else {
+        path.lineTo(x, y);
+      }
+    }
+
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
 
 // ==========================================
@@ -1141,10 +1250,7 @@ class LimitedOffersSection extends StatelessWidget {
               ),
               const SizedBox(width: 10),
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 4,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: const Color(0xFFFFEEEE),
                   borderRadius: BorderRadius.circular(20),
@@ -1312,8 +1418,7 @@ class ForYouSection extends StatelessWidget {
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: products.length,
-              separatorBuilder: (context, index) =>
-                  const SizedBox(width: 13),
+              separatorBuilder: (context, index) => const SizedBox(width: 13),
               itemBuilder: (context, index) {
                 final product = products[index];
 
@@ -1448,10 +1553,7 @@ class MissionSection extends StatelessWidget {
                         'Complete personal information',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: boldStyle.copyWith(
-                          fontSize: 14,
-                          height: 1.2,
-                        ),
+                        style: boldStyle.copyWith(fontSize: 14, height: 1.2),
                       ),
                       const SizedBox(height: 15),
                       Row(
@@ -1484,16 +1586,11 @@ class MissionSection extends StatelessWidget {
                                 ),
                                 TextSpan(
                                   text: '/3',
-                                  style: TextStyle(
-                                    color: Color(0xFF999999),
-                                  ),
+                                  style: TextStyle(color: Color(0xFF999999)),
                                 ),
                               ],
                             ),
-                            style: boldStyle.copyWith(
-                              fontSize: 13,
-                              height: 1,
-                            ),
+                            style: boldStyle.copyWith(fontSize: 13, height: 1),
                           ),
                         ],
                       ),
@@ -1517,10 +1614,7 @@ class MissionSection extends StatelessWidget {
                     minimumSize: Size.zero,
                     padding: EdgeInsets.zero,
                     visualDensity: VisualDensity.standard,
-                    side: const BorderSide(
-                      color: buttonOrange,
-                      width: 1.4,
-                    ),
+                    side: const BorderSide(color: buttonOrange, width: 1.4),
                     shape: const StadiumBorder(),
                   ),
                   child: Text(
