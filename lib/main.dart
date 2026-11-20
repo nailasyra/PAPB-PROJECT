@@ -1,15 +1,81 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'home/home.dart';
 import 'menu/menu.dart';
 import 'qr/qr.dart';
 import 'member/member.dart';
 import 'me/me.dart';
+import 'promor_alert.dart';
 
 void main() {
   runApp(const TomoroApp());
 }
+
+// ==========================================
+// CUSTOM BOTTOM BAR - LENGKUNGAN CEMBUNG
+// ==========================================
+
+class RaisedCenterShape extends NotchedShape {
+  const RaisedCenterShape();
+
+  @override
+  Path getOuterPath(Rect host, Rect? guest) {
+    final path = Path();
+
+    if (guest == null) {
+      return path..addRect(host);
+    }
+
+    final center = guest.center.dx;
+
+    // Lebar dan tinggi lengkungan
+    const double curveWidth = 60;
+    const double curveHeight = 30;
+
+    final leftCurve = center - curveWidth;
+    final rightCurve = center + curveWidth;
+
+    path.moveTo(host.left, host.top);
+
+    // Bagian kiri
+    path.lineTo(leftCurve, host.top);
+
+    // Lengkungan naik ke tengah
+    path.cubicTo(
+      center - curveWidth * 0.35,
+      host.top,
+      center - curveWidth * 0.45,
+      host.top - curveHeight,
+      center,
+      host.top - curveHeight,
+    );
+
+    // Lengkungan turun ke kanan
+    path.cubicTo(
+      center + curveWidth * 0.35,
+      host.top - curveHeight,
+      center + curveWidth * 0.45,
+      host.top,
+      rightCurve,
+      host.top,
+    );
+
+    // Bagian kanan dan bawah
+    path.lineTo(host.right, host.top);
+    path.lineTo(host.right, host.bottom);
+    path.lineTo(host.left, host.bottom);
+
+    path.close();
+
+    return path;
+  }
+}
+
+// ==========================================
+// MAIN APP
+// ==========================================
 
 class TomoroApp extends StatelessWidget {
   const TomoroApp({super.key});
@@ -22,12 +88,16 @@ class TomoroApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         scaffoldBackgroundColor: const Color(0xFFF8F8F8),
-        fontFamily: 'Roboto',
+        fontFamily: GoogleFonts.lexend().fontFamily,
       ),
       home: const MainNavigation(),
     );
   }
 }
+
+// ==========================================
+// MAIN NAVIGATION
+// ==========================================
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
@@ -48,6 +118,20 @@ class _MainNavigationState extends State<MainNavigation> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+
+    // Tampilkan promo 3 detik saat app pertama dibuka
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showPromoAlert(
+        context,
+        imagePath: 'assets/images/backgrounds/image.png',
+        seconds: 3,
+      );
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(
@@ -55,12 +139,13 @@ class _MainNavigationState extends State<MainNavigation> {
         children: pages,
       ),
 
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.centerDocked,
+      // ======================================
+      // FLOATING QR BUTTON
+      // ======================================
 
       floatingActionButton: SizedBox(
-        width: 58,
-        height: 58,
+        width: 50,
+        height: 50,
         child: FloatingActionButton(
           onPressed: () {
             setState(() {
@@ -68,44 +153,79 @@ class _MainNavigationState extends State<MainNavigation> {
             });
           },
           backgroundColor: const Color(0xFFFF5428),
-          elevation: 3,
+          elevation: 2,
           shape: const CircleBorder(),
-          child: const Icon(
-            Icons.qr_code,
+          child: Image.asset(
+            'assets/images/icon/qr.png',
+            width: 35,
+            height: 35,
             color: Colors.white,
-            size: 29,
+            fit: BoxFit.contain,
           ),
         ),
       ),
 
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
+      // ======================================
+      // BOTTOM NAVIGATION BAR
+      // ======================================
+
       bottomNavigationBar: BottomAppBar(
         color: Colors.white,
         elevation: 8,
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 7,
+
+        // Custom lengkungan cembung ke atas
+        shape: const RaisedCenterShape(),
+
+        notchMargin: 0,
         height: 65,
         padding: EdgeInsets.zero,
+        clipBehavior: Clip.antiAlias,
+
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            navItem(Icons.home_rounded, 'Home', 0),
-            navItem(Icons.local_cafe_rounded, 'Menu', 1),
+            navItem('assets/images/icon/home.svg', 'Home', 0),
+            navItem('assets/images/icon/menu.svg', 'Menu', 1),
 
-            const SizedBox(width: 55),
+            // Ruang khusus untuk tombol QR
+            SizedBox(
+              width: 55,
+              height: 65,
+              child: Align(
+                alignment: const Alignment(0, 0.55),
+                child: const Text(
+                  'QR',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
 
-            navItem(Icons.workspace_premium_rounded, 'Member', 3),
-            navItem(Icons.person_rounded, 'Me', 4),
+            navItem('assets/images/icon/member.svg', 'Member', 3),
+            navItem('assets/images/icon/me.svg', 'Me', 4),
           ],
         ),
       ),
     );
   }
 
-  Widget navItem(IconData icon, String title, int index) {
+  // ==========================================
+  // NAVIGATION ITEM
+  // ==========================================
+
+  Widget navItem(String iconPath, String title, int index) {
     final bool isSelected = selectedIndex == index;
 
     return Expanded(
       child: InkWell(
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        hoverColor: Colors.transparent,
         onTap: () {
           setState(() {
             selectedIndex = index;
@@ -116,21 +236,23 @@ class _MainNavigationState extends State<MainNavigation> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                icon,
-                size: 23,
-                color: isSelected
-                    ? const Color(0xFFFF5428)
-                    : const Color(0xFFD0D0D0),
+              SvgPicture.asset(
+                iconPath,
+                width: 23,
+                height: 23,
+                colorFilter: ColorFilter.mode(
+                  isSelected
+                      ? const Color(0xFFFF5428)
+                      : const Color(0xFFD0D0D0),
+                  BlendMode.srcIn,
+                ),
               ),
               const SizedBox(height: 3),
               Text(
                 title,
                 style: TextStyle(
                   fontSize: 11,
-                  color: isSelected
-                      ? const Color(0xFFFF5428)
-                      : Colors.grey,
+                  color: isSelected ? const Color(0xFFFF5428) : Colors.grey,
                 ),
               ),
             ],
