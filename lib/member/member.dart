@@ -20,8 +20,10 @@ const String kMemberAssetDir = 'assets/images/member';
 const bool kDebugMascotBox = false;
 
 // true = ikon Voucher selalu memakai gambar kode (kupon umum),
-// mengabaikan file ic_voucher_lvX.png kalau ada.
-const bool kForcePaintedVoucher = true;
+// mengabaikan file lvlX_voucher.png kalau ada.
+// false = ikon Voucher memakai file assets/images/member/lvl1_voucher.png
+// sampai lvl4_voucher.png (satu file per level).
+const bool kForcePaintedVoucher = false;
 
 // Lama efek (V + cahaya + percikan bintang) sebelum hilang (milidetik).
 const int kEffectDurationMs = 3200;
@@ -38,12 +40,20 @@ const double kVOpacity = 0.14;
 // HURUF V + LINGKARAN + CAHAYA
 // ------------------------------------------
 
-// Lebar & tinggi V sebagai pecahan lebar layar.
-const double kVWidth = 0.29;
-const double kVHeight = 0.29;
+// Bentuk V mengikuti kepala maskot: sisi dalam V turun dari atas, tepat
+// menyentuh ujung kedua telinga, lalu melengkung mengikuti cekungan
+// kepala. Semua ukuran dalam dp pada lebar 411.
 
-// V SELALU berpusat tepat di tengah maskot (simetris di belakang maskot).
-// Y = dp pada lebar 411 (bagian atas V), sama untuk semua level.
+// Setengah lebar V di bagian atas (lebar V = 2 x ini). Sama semua level.
+const double kVOuterHalf = 60;
+// Tebal lengan V di bagian atas.
+const double kVArm = 22;
+// Seberapa jauh V turun di bawah ujung telinga (tersembunyi di balik maskot).
+const double kVBelowEar = 70;
+// Setengah lebar ujung bawah V (tersembunyi di balik maskot).
+const double kVTipHalf = 20;
+
+// Bagian atas V (dp pada lebar 411), sama untuk semua level.
 const double kVTopY = 157;
 
 // Geser halus V per level kalau perlu (pecahan lebar layar / dp).
@@ -56,11 +66,17 @@ const List<double> kVOffsetY = [0, 0, 0, 0];
 // Negatif = ke kiri, positif = ke kanan. Urutan: Lv.1, Lv.2, Lv.3, Lv.4
 const List<double> kEffectOffsetX = [0, 0, 0, -8];
 
-// Lengkung bagian dalam V = lengkung kepala maskot (per level: Lv.1..Lv.4).
-// open  = lebar lengkung (pecahan lebar V), samakan dengan lebar kepala.
-// depth = kedalaman lengkung (pecahan tinggi V).
-const List<double> kVInnerOpen = [0.50, 0.50, 0.50, 0.50];
-const List<double> kVInnerDepth = [0.55, 0.55, 0.55, 0.55];
+// KEPALA maskot per level (Lv.1, Lv.2, Lv.3, Lv.4). V dibentuk dari sini.
+//   kVHeadDx   : geser tengah V dari titik tengah efek, supaya tepat di
+//                tengah kepala (negatif = kiri, positif = kanan).
+//   kHeadHalf  : setengah jarak antara ujung telinga kiri dan kanan.
+//   kHeadEarY  : tinggi ujung telinga dari atas layar.
+//   kHeadDip   : kedalaman cekungan di antara dua telinga.
+// Kalau V terlihat bergeser / tidak menempel di kepala, ubah angka level itu.
+const List<double> kVHeadDx = [-25, -23, 6, -11];
+const List<double> kHeadHalf = [35, 36, 33, 36];
+const List<double> kHeadEarY = [194, 195, 205, 195];
+const List<double> kHeadDip = [9, 9, 9, 9];
 
 // Lingkaran berlapis tepat di bawah maskot, khusus Lv.3 & Lv.4.
 // Pusatnya mengikuti tengah maskot (X). Y dalam dp pada lebar 411.
@@ -454,7 +470,8 @@ class _MemberLevelPageState extends State<MemberLevelPage> {
                   ),
                 ),
 
-                // Sheet Benefits (tetap, isi berganti)
+                // Sheet Benefits: judul "Benefits" TETAP di atas, hanya
+                // daftar kartu di bawahnya yang bisa digeser.
                 Positioned(
                   top: sheetTop,
                   left: 0,
@@ -467,30 +484,52 @@ class _MemberLevelPageState extends State<MemberLevelPage> {
                         top: Radius.circular(32),
                       ),
                     ),
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 220),
-                      // Selalu rata ATAS dan memenuhi sheet.
-                      layoutBuilder: (currentChild, previousChildren) {
-                        return Stack(
-                          alignment: Alignment.topCenter,
-                          children: [
-                            ...previousChildren,
-                            if (currentChild != null) currentChild,
-                          ],
-                        );
-                      },
-                      child: SizedBox.expand(
-                        key: ValueKey(selectedLevel),
-                        child: SingleChildScrollView(
-                          padding: const EdgeInsets.fromLTRB(17, 0, 17, 110),
-                          child: BenefitsSection(
-                            s: s,
-                            level: member.level,
-                            benefits: member.benefits,
-                            color: member.color,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Judul tetap (tidak ikut tergeser)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 17),
+                          child: BenefitsTitle(s: s),
+                        ),
+
+                        // Daftar kartu. Dipotong tepat di bawah judul.
+                        // Kalau isinya muat (Lv.1 - Lv.3) tidak bisa digeser;
+                        // kalau tidak muat (Lv.4) bisa digeser ke atas.
+                        Expanded(
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 220),
+                            // Selalu rata ATAS dan memenuhi area.
+                            layoutBuilder: (currentChild, previousChildren) {
+                              return Stack(
+                                alignment: Alignment.topCenter,
+                                children: [
+                                  ...previousChildren,
+                                  if (currentChild != null) currentChild,
+                                ],
+                              );
+                            },
+                            child: SizedBox.expand(
+                              key: ValueKey(selectedLevel),
+                              child: SingleChildScrollView(
+                                physics: const ClampingScrollPhysics(),
+                                padding: EdgeInsets.fromLTRB(
+                                  17,
+                                  0,
+                                  17,
+                                  8 * s,
+                                ),
+                                child: BenefitsSection(
+                                  s: s,
+                                  level: member.level,
+                                  benefits: member.benefits,
+                                  color: member.color,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
                 ),
@@ -577,16 +616,16 @@ class TermsPage extends StatelessWidget {
                   children: [
                     for (int i = 0; i < kTermsItems.length; i++)
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 22),
+                        padding: const EdgeInsets.only(bottom: 18),
                         child: Text(
                           kTermsItems[i],
                           textAlign: i == kTermsItems.length - 1
                               ? TextAlign.justify
                               : TextAlign.start,
                           style: ts(
-                            16,
+                            11.5,
                             color: darkColor,
-                            height: 1.45,
+                            height: 1.6,
                           ),
                         ),
                       ),
@@ -862,10 +901,11 @@ class _HeaderPageState extends State<HeaderPage>
     final double blobCy = 204 * s;
 
     // Huruf V: selalu berpusat di tengah maskot (simetris)
-    final double vW = w * kVWidth;
-    final double vH = w * kVHeight;
-    final double vCx = ex + w * kVOffsetX[li];
     final double vTop = (kVTopY + kVOffsetY[li]) * s;
+    final double vCx = ex + kVHeadDx[li] * s + w * kVOffsetX[li];
+    final double vRise = kHeadEarY[li] - (kVTopY + kVOffsetY[li]); // dp
+    final double vW = kVOuterHalf * 2 * s;
+    final double vH = (vRise + kVBelowEar) * s;
 
     // Lingkaran berlapis tepat di bawah maskot (Lv.3 & Lv.4)
     final double ringW = mw * kRingWidthFactor;
@@ -924,8 +964,10 @@ class _HeaderPageState extends State<HeaderPage>
                   return CustomPaint(
                     painter: VPainter(
                       intensity: intensity(effects.value),
-                      open: kVInnerOpen[li],
-                      depth: kVInnerDepth[li],
+                      s: s,
+                      rise: vRise,
+                      earHalf: kHeadHalf[li],
+                      dip: kHeadDip[li],
                     ),
                   );
                 },
@@ -1219,36 +1261,47 @@ class GlowPainter extends CustomPainter {
       old.radius != radius;
 }
 
-// Huruf V lebar & transparan yang muncul lalu menghilang.
-// Sisi dalam V melengkung mengikuti kepala maskot. Simetris kiri-kanan.
+// Huruf V transparan yang muncul lalu menghilang.
+// Sisi dalam V turun dari atas sampai tepat di ujung telinga maskot, lalu
+// melengkung mengikuti cekungan kepala. Simetris kiri-kanan, di belakang maskot.
 class VPainter extends CustomPainter {
   final double intensity;
-  final double open;
-  final double depth;
+  final double s; // skala dp -> piksel
+  final double rise; // jarak (dp) dari atas V ke ujung telinga
+  final double earHalf; // setengah jarak ujung telinga (dp)
+  final double dip; // kedalaman cekungan kepala (dp)
 
   const VPainter({
     required this.intensity,
-    required this.open,
-    required this.depth,
+    required this.s,
+    required this.rise,
+    required this.earHalf,
+    required this.dip,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
     if (intensity <= 0) return;
-    final double w = size.width;
-    final double h = size.height;
-    final double l = w * (0.5 - open / 2);
-    final double r = w * (0.5 + open / 2);
-    final double d = h * depth;
+
+    final double c = size.width / 2;
+    final double oh = kVOuterHalf * s; // setengah lebar luar (atas)
+    final double ih = (kVOuterHalf - kVArm) * s; // setengah lebar dalam (atas)
+    final double eh = earHalf * s; // ujung telinga
+    final double ey = rise * s; // tinggi ujung telinga dari atas V
+    final double dy = (rise + dip) * s; // dasar cekungan kepala
+    final double by = (rise + kVBelowEar) * s; // bawah V (tersembunyi)
+    final double th = kVTipHalf * s; // setengah lebar ujung bawah
 
     final path = Path()
-      ..moveTo(0, 0)
-      ..lineTo(l, 0)
-      ..quadraticBezierTo(l, d, w * 0.5, d)
-      ..quadraticBezierTo(r, d, r, 0)
-      ..lineTo(w, 0)
-      ..lineTo(w * 0.62, h)
-      ..lineTo(w * 0.38, h)
+      ..moveTo(c - oh, 0)
+      ..lineTo(c - ih, 0)
+      ..lineTo(c - eh, ey)
+      ..quadraticBezierTo(c - eh * 0.3, dy, c, dy)
+      ..quadraticBezierTo(c + eh * 0.3, dy, c + eh, ey)
+      ..lineTo(c + ih, 0)
+      ..lineTo(c + oh, 0)
+      ..lineTo(c + th, by)
+      ..lineTo(c - th, by)
       ..close();
 
     canvas.drawPath(
@@ -1259,7 +1312,11 @@ class VPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant VPainter old) =>
-      old.intensity != intensity || old.open != open || old.depth != depth;
+      old.intensity != intensity ||
+      old.s != s ||
+      old.rise != rise ||
+      old.earHalf != earHalf ||
+      old.dip != dip;
 }
 
 // Lingkaran berlapis (2 lapis) tepat di bawah maskot, Lv.3 & Lv.4.
@@ -1412,19 +1469,11 @@ class CoffeeMascot extends StatelessWidget {
 // BENEFITS
 // ==========================================
 
-class BenefitsSection extends StatelessWidget {
+// Judul "Benefits" yang tetap di atas (tidak ikut tergeser).
+class BenefitsTitle extends StatelessWidget {
   final double s;
-  final int level;
-  final List<BenefitData> benefits;
-  final Color color;
 
-  const BenefitsSection({
-    super.key,
-    required this.s,
-    required this.level,
-    required this.benefits,
-    required this.color,
-  });
+  const BenefitsTitle({super.key, required this.s});
 
   @override
   Widget build(BuildContext context) {
@@ -1448,6 +1497,31 @@ class BenefitsSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: 19 * s),
+      ],
+    );
+  }
+}
+
+// Daftar kartu benefit (bagian yang bisa digeser).
+class BenefitsSection extends StatelessWidget {
+  final double s;
+  final int level;
+  final List<BenefitData> benefits;
+  final Color color;
+
+  const BenefitsSection({
+    super.key,
+    required this.s,
+    required this.level,
+    required this.benefits,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
         ...benefits.map(
           (b) => Padding(
             padding: EdgeInsets.only(bottom: 17 * s),
@@ -1532,7 +1606,7 @@ class BenefitCard extends StatelessWidget {
 // assets/images/member/, file itu yang dipakai (hasil paling mirip 100%).
 // Kalau tidak ada, dipakai ikon gambar kode di bawah. Nama file:
 //   ic_points_lv1.png ... ic_points_lv4.png   (koin / APP 1.xx Points)
-//   ic_voucher_lv1.png ... ic_voucher_lv4.png (Membership Voucher)
+//   lvl1_voucher.png ... lvl4_voucher.png     (Membership Voucher)
 //   ic_birthday_lv2.png ... ic_birthday_lv4.png
 //   ic_gift_lv4.png                           (Exclusive Experience)
 //
@@ -1562,7 +1636,7 @@ class BenefitIcon extends StatelessWidget {
       case BenefitIconType.multiplier:
         return 'ic_points_lv$level';
       case BenefitIconType.voucher:
-        return 'ic_voucher_lv$level';
+        return 'lvl${level}_voucher';
       case BenefitIconType.birthday:
         return 'ic_birthday_lv$level';
       case BenefitIconType.gift:
@@ -1587,11 +1661,54 @@ class BenefitIcon extends StatelessWidget {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    if (type == BenefitIconType.voucher && kForcePaintedVoucher) {
+  // Ikon voucher dari PNG per level (lvl1_voucher.png ... lvl4_voucher.png).
+  // PNG hanya berisi tiket + kilau (latar transparan), jadi lingkaran latar
+  // digambar di sini dengan warna level, sama seperti ikon koin dan kue.
+  Widget voucherIcon() {
+    if (kForcePaintedVoucher) {
       return SizedBox(width: size, height: size, child: painted());
     }
+
+    return SizedBox(
+      width: size,
+      height: size,
+      child: Stack(
+        children: [
+          // lingkaran latar
+          Container(
+            width: size,
+            height: size,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: color.withValues(alpha: 0.12),
+            ),
+          ),
+          // tiket + kilau
+          Image.asset(
+            '$kMemberAssetDir/$assetName.png',
+            width: size,
+            height: size,
+            fit: BoxFit.contain,
+            filterQuality: FilterQuality.high,
+            // kalau PNG tidak ada, pakai gambar kode (tanpa lingkaran ganda)
+            errorBuilder: (context, error, stackTrace) => CustomPaint(
+              size: Size(size, size),
+              painter: BenefitIconPainter(
+                type: type,
+                badge: badge,
+                color: color,
+                holeColor: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (type == BenefitIconType.voucher) return voucherIcon();
 
     return SizedBox(
       width: size,
@@ -1761,87 +1878,87 @@ class BenefitIconPainter extends CustomPainter {
     }
   }
 
-  // ---------- Voucher (kupon pada umumnya) ----------
-  // Satu tiket persegi panjang dengan lekukan setengah lingkaran di kiri &
-  // kanan, garis putus-putus vertikal, tanda persen di sisi kiri, dan
-  // bintang di sisi kanan.
-  void _voucher(Canvas canvas) {
+  // ---------- Voucher (dua tiket miring) ----------
+  // Bagian atas tiket (stub) warna tua + garis putus-putus, badan warna
+  // muda berbingkai, bintang putih di tengah. Dua kilau kecil di luar.
+  void _ticket(
+    Canvas canvas,
+    Offset c,
+    double angle,
+    double w,
+    double h,
+    double starSize,
+  ) {
+    final Color stub = Color.lerp(color, Colors.black, 0.06)!;
+    final Color bodyFill = Color.lerp(color, Colors.white, 0.58)!;
+    final double stubH = h * 0.2;
+
     canvas.save();
-    canvas.translate(28, 28);
-    canvas.rotate(-0.17);
+    canvas.translate(c.dx, c.dy);
+    canvas.rotate(angle);
 
-    const double w = 42;
-    const double h = 26;
-    const double divX = 8.0; // posisi garis putus-putus
     final Rect r = Rect.fromCenter(center: Offset.zero, width: w, height: h);
+    final double sy = -h / 2 + stubH; // batas stub dan badan
 
+    // bentuk tiket dengan lekukan kecil di kiri-kanan batas stub
     Path body = Path()
-      ..addRRect(RRect.fromRectAndRadius(r, const Radius.circular(3)));
+      ..addRRect(RRect.fromRectAndRadius(r, const Radius.circular(1.5)));
     final Path notches = Path()
-      ..addOval(Rect.fromCircle(center: const Offset(-w / 2, 0), radius: 3.6))
-      ..addOval(Rect.fromCircle(center: const Offset(w / 2, 0), radius: 3.6))
-      ..addOval(Rect.fromCircle(center: const Offset(divX, -h / 2), radius: 2.0))
-      ..addOval(Rect.fromCircle(center: const Offset(divX, h / 2), radius: 2.0));
+      ..addOval(Rect.fromCircle(center: Offset(-w / 2, sy), radius: 1.3))
+      ..addOval(Rect.fromCircle(center: Offset(w / 2, sy), radius: 1.3));
     body = Path.combine(PathOperation.difference, body, notches);
 
-    // bayangan tipis
-    canvas.drawPath(
-      body.shift(const Offset(0.8, 1.2)),
-      Paint()..color = dark.withValues(alpha: 0.25),
-    );
+    // badan muda
+    canvas.drawPath(body, Paint()..color = bodyFill);
 
-    // badan tiket
-    canvas.drawPath(body, Paint()..color = color);
-
-    // sisi kanan (stub) lebih terang
+    // stub tua di atas
     canvas.save();
     canvas.clipPath(body);
     canvas.drawRect(
-      Rect.fromLTRB(divX, -h / 2, w / 2, h / 2),
-      Paint()..color = light.withValues(alpha: 0.6),
+      Rect.fromLTRB(-w / 2, -h / 2, w / 2, sy),
+      Paint()..color = stub,
     );
     canvas.restore();
 
-    // garis putus-putus vertikal
+    // bingkai
+    canvas.drawPath(
+      body,
+      Paint()
+        ..color = color
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.9
+        ..strokeJoin = StrokeJoin.round,
+    );
+
+    // garis putus-putus putih di batas stub
     final Paint dash = Paint()
       ..color = Colors.white.withValues(alpha: 0.95)
-      ..strokeWidth = 1.0
+      ..strokeWidth = 0.7
       ..strokeCap = StrokeCap.round;
-    for (double y = -h / 2 + 3.6; y < h / 2 - 2.6; y += 2.8) {
-      canvas.drawLine(Offset(divX, y), Offset(divX, y + 1.4), dash);
+    for (double x = -w / 2 + 1.8; x < w / 2 - 1.6; x += 1.8) {
+      canvas.drawLine(Offset(x, sy), Offset(x + 0.9, sy), dash);
     }
 
-    // tanda persen di sisi kiri
-    const Offset pc = Offset(-(w / 2 - divX) / 2 + 1.0 - 6.0, 0);
-    final Paint wp = Paint()..color = Colors.white;
-    final Paint hole = Paint()..color = color;
-    canvas.drawCircle(pc + const Offset(-3.6, -3.8), 2.3, wp);
-    canvas.drawCircle(pc + const Offset(3.6, 3.8), 2.3, wp);
-    canvas.drawCircle(pc + const Offset(-3.6, -3.8), 0.9, hole);
-    canvas.drawCircle(pc + const Offset(3.6, 3.8), 0.9, hole);
-    canvas.drawLine(
-      pc + const Offset(4.6, -5.6),
-      pc + const Offset(-4.6, 5.6),
-      Paint()
-        ..color = Colors.white
-        ..strokeWidth = 1.7
-        ..strokeCap = StrokeCap.round,
-    );
-
-    // bintang kecil di stub kanan
+    // bintang putih di tengah badan
     sparkle(
       canvas,
-      const Offset(divX + (w / 2 - divX) / 2, 0),
-      3.0,
-      Paint()..color = Colors.white,
+      Offset(0, sy + (h / 2 - sy) * 0.42),
+      starSize,
+      Paint()..color = Colors.white.withValues(alpha: 0.96),
     );
 
     canvas.restore();
+  }
+
+  void _voucher(Canvas canvas) {
+    // tiket belakang (miring ke kiri), lalu tiket depan (miring ke kanan)
+    _ticket(canvas, const Offset(17.6, 29.8), -0.38, 11.5, 19.5, 3.0);
+    _ticket(canvas, const Offset(32.0, 30.0), 0.45, 14.0, 22.5, 4.4);
 
     // dua kilau kecil di luar tiket
-    final Paint sp = Paint()..color = light.withValues(alpha: 0.95);
-    sparkle(canvas, const Offset(10.0, 11.0), 2.4, sp);
-    sparkle(canvas, const Offset(47.0, 46.0), 2.6, sp);
+    final Paint sp = Paint()..color = light.withValues(alpha: 0.85);
+    sparkle(canvas, const Offset(24.8, 14.4), 3.0, sp);
+    sparkle(canvas, const Offset(42.6, 36.6), 3.2, sp);
   }
 
   // ---------- Kue ulang tahun ----------
