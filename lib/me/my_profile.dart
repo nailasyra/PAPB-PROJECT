@@ -34,6 +34,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
     try {
       final date = DateTime.parse(value);
+
       return '${date.day.toString().padLeft(2, '0')}/'
           '${date.month.toString().padLeft(2, '0')}/'
           '${date.year}';
@@ -50,6 +51,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
     entry = OverlayEntry(
       builder: (context) => Center(
         child: Material(
+          color: Colors.transparent,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
             decoration: BoxDecoration(
@@ -131,88 +133,72 @@ class _MyProfilePageState extends State<MyProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+
       appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 0,
-        scrolledUnderElevation: 0,
         foregroundColor: Colors.black,
+        surfaceTintColor: Colors.transparent,
+
+        elevation: 6,
+        scrolledUnderElevation: 10,
+        shadowColor: const Color(0x26000000),
+
         centerTitle: true,
         title: const Text(
           'My Profile',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),
+
       body: SafeArea(
         child: Column(
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(32, 55, 32, 20),
+                padding: const EdgeInsets.fromLTRB(32, 20, 32, 15),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // PROFILE IMAGE
                     Center(
-                      child: Stack(
-                        children: [
-                          Container(
-                            width: 145,
-                            height: 145,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Color(0xFFF9DCCF),
-                            ),
-                            child: const Icon(
-                              Icons.person,
-                              size: 100,
-                              color: Color(0xFFFFF0E7),
-                            ),
-                          ),
-                          Positioned(
-                            right: 0,
-                            bottom: 0,
-                            child: Container(
-                              width: 42,
-                              height: 42,
-                              decoration: const BoxDecoration(
-                                color: Colors.grey,
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.camera_alt_outlined,
-                                color: Colors.white,
-                                size: 25,
-                              ),
-                            ),
-                          ),
-                        ],
+                      child: Image.asset(
+                        'assets/images/icon/profil.png',
+                        width: 130,
+                        height: 130,
+                        fit: BoxFit.contain,
                       ),
                     ),
 
-                    const SizedBox(height: 65),
+                    const SizedBox(height: 20),
 
+                    // NICKNAME
                     _label('Nick Name *'),
                     _textField(nicknameController),
 
-                    const SizedBox(height: 60),
+                    const SizedBox(height: 15),
 
+                    // EMAIL
                     _label('Email'),
                     _textField(emailController),
 
-                    const SizedBox(height: 60),
+                    const SizedBox(height: 15),
 
+                    // PIN
                     _label('PIN'),
+
                     Row(
                       children: [
                         const Expanded(
                           child: Text(
                             '••••••',
                             style: TextStyle(
-                              fontSize: 25,
+                              fontSize: 15,
                               letterSpacing: 2,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
+
                         TextButton(
                           onPressed: () {
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -227,17 +213,20 @@ class _MyProfilePageState extends State<MyProfilePage> {
                             'Reset',
                             style: TextStyle(
                               color: Color(0xFF6798CF),
-                              fontSize: 18,
+                              fontSize: 15,
                             ),
                           ),
                         ),
                       ],
                     ),
+
                     const Divider(color: Color(0xFFD6D6D6)),
 
-                    const SizedBox(height: 60),
+                    const SizedBox(height: 15),
 
+                    // GENDER
                     _label('Gender'),
+
                     InkWell(
                       onTap: _chooseGender,
                       child: _selectionField(
@@ -245,19 +234,29 @@ class _MyProfilePageState extends State<MyProfilePage> {
                       ),
                     ),
 
-                    const SizedBox(height: 60),
+                    const SizedBox(height: 15),
 
-                    _selectionField(birthday, color: Colors.grey),
+                    // BIRTHDAY
+                    _label('Birthday'),
+
+                    InkWell(
+                      onTap: _chooseBirthday,
+                      child: _selectionField(
+                        birthday.isEmpty ? 'Select birthday' : birthday,
+                        color: Colors.grey,
+                      ),
+                    ),
                   ],
                 ),
               ),
             ),
 
+            // SAVE BUTTON
             Padding(
-              padding: const EdgeInsets.fromLTRB(32, 10, 32, 20),
+              padding: const EdgeInsets.fromLTRB(32, 5, 32, 15),
               child: SizedBox(
                 width: double.infinity,
-                height: 65,
+                height: 55,
                 child: ElevatedButton(
                   onPressed: () async {
                     final updatedUser = UserModel(
@@ -309,7 +308,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                   ),
                   child: const Text(
                     'Save',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -320,16 +319,18 @@ class _MyProfilePageState extends State<MyProfilePage> {
     );
   }
 
+  // LABEL
   Widget _label(String title) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 22),
+      padding: const EdgeInsets.only(bottom: 3),
       child: Text(
         title,
-        style: const TextStyle(fontSize: 16, color: Colors.black87),
+        style: const TextStyle(fontSize: 13, color: Colors.black87),
       ),
     );
   }
 
+  // TEXT FIELD
   Widget _textField(
     TextEditingController controller, {
     bool readOnly = false,
@@ -338,9 +339,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
     return TextField(
       controller: controller,
       readOnly: readOnly,
-      style: TextStyle(fontSize: 20, color: textColor),
+      style: TextStyle(fontSize: 13, color: textColor),
       decoration: const InputDecoration(
-        contentPadding: EdgeInsets.only(bottom: 12),
+        contentPadding: EdgeInsets.only(bottom: 8),
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: Color(0xFFD6D6D6)),
         ),
@@ -351,18 +352,19 @@ class _MyProfilePageState extends State<MyProfilePage> {
     );
   }
 
+  // SELECTION FIELD
   Widget _selectionField(String value, {Color color = Colors.black}) {
     return Container(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: 8),
       decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(color: Color(0xFFD6D6D6))),
       ),
       child: Row(
         children: [
           Expanded(
-            child: Text(value, style: TextStyle(fontSize: 20, color: color)),
+            child: Text(value, style: TextStyle(fontSize: 13, color: color)),
           ),
-          const Icon(Icons.chevron_right, color: Colors.grey, size: 28),
+          const Icon(Icons.chevron_right, color: Colors.grey, size: 20),
         ],
       ),
     );

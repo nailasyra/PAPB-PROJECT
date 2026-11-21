@@ -134,68 +134,71 @@ class _SettingsPageState extends State<SettingsPage> {
               onTap: () {
                 showModalBottomSheet(
                   context: context,
+                  isScrollControlled: true,
                   backgroundColor: Colors.transparent,
+                  constraints: const BoxConstraints(maxWidth: double.infinity),
                   builder: (sheetContext) {
-                    return Container(
-                      margin: const EdgeInsets.only(
-                        left: 12,
-                        right: 12,
-                        bottom: 10,
-                      ),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(12),
+                    return SafeArea(
+                      top: false,
+                      child: Container(
+                        width: double.infinity,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(12),
+                          ),
                         ),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              // Tutup Bottom Sheet
-                              Navigator.pop(sheetContext);
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                // Tutup Bottom Sheet
+                                Navigator.pop(sheetContext);
 
-                              // Ubah status login menjadi Guest
-                              widget.onLogout?.call();
+                                // Logout
+                                widget.onLogout?.call();
 
-                              // Tutup halaman Settings, kembali ke Me
-                              Navigator.pop(context);
-                            },
-                            child: const SizedBox(
-                              height: 66,
-                              width: double.infinity,
-                              child: Center(
-                                child: Text(
-                                  'Logout now',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFF292929),
+                                // Kembali ke halaman Me
+                                Navigator.pop(context);
+                              },
+                              child: const SizedBox(
+                                height: 66,
+                                width: double.infinity,
+                                child: Center(
+                                  child: Text(
+                                    'Logout now',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFF292929),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          const Divider(height: 1, color: Color(0xFFEEEEEE)),
-                          InkWell(
-                            onTap: () => Navigator.pop(context),
-                            child: const SizedBox(
-                              height: 70,
-                              width: double.infinity,
-                              child: Center(
-                                child: Text(
-                                  'Cancel',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFF292929),
+
+                            const Divider(height: 1, color: Color(0xFFEEEEEE)),
+
+                            InkWell(
+                              onTap: () => Navigator.pop(sheetContext),
+                              child: const SizedBox(
+                                height: 70,
+                                width: double.infinity,
+                                child: Center(
+                                  child: Text(
+                                    'Cancel',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFF292929),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   },
