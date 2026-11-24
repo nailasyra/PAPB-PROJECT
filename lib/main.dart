@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'home/home.dart';
 import 'menu/menu.dart';
 import 'qr/qr.dart';
@@ -10,18 +9,13 @@ import 'member/member.dart';
 import 'me/me.dart';
 import 'database/database_helper.dart';
 
-// ==========================================
-// MAIN APP
-// ==========================================
 
 void main() {
   runApp(const TomoroApp());
 }
 
-// ==========================================
-// CUSTOM BOTTOM BAR - LENGKUNGAN CEMBUNG
-// ==========================================
 
+//mendefinisikan bentuk potongan atau lekukan
 class RaisedCenterShape extends NotchedShape {
   const RaisedCenterShape();
 
@@ -72,10 +66,7 @@ class RaisedCenterShape extends NotchedShape {
   }
 }
 
-// ==========================================
 // MAIN APP
-// ==========================================
-
 class TomoroApp extends StatelessWidget {
   const TomoroApp({super.key});
 
@@ -94,10 +85,7 @@ class TomoroApp extends StatelessWidget {
   }
 }
 
-// ==========================================
 // MAIN NAVIGATION
-// ==========================================
-
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
 
@@ -119,7 +107,10 @@ class _MainNavigationState extends State<MainNavigation> {
       body: IndexedStack(
         index: selectedIndex,
         children: [
+          //home
           const HomePage(),
+
+          //menu
           const MenuPage(),
 
           // QR
@@ -132,6 +123,7 @@ class _MainNavigationState extends State<MainNavigation> {
             },
           ),
 
+          //member
           const MemberPage(),
 
           // ME

@@ -1,10 +1,8 @@
 import 'dart:math' as math;
-import '../auth/register.dart';
 import '../auth/login.dart';
 import '../database/database_helper.dart';
 import '../database/database_viewer.dart';
 import 'package:flutter/material.dart';
-import 'my_profile.dart';
 import 'settings.dart';
 
 class MePage extends StatelessWidget {
@@ -232,7 +230,7 @@ class MePage extends StatelessWidget {
             top: 40,
             child: _circle(
               100,
-              const Color.fromARGB(255, 250, 202, 187).withOpacity(0.35),
+              const Color.fromARGB(255, 250, 202, 187).withValues(alpha:0.35),
             ),
           ),
           Positioned(
@@ -240,7 +238,7 @@ class MePage extends StatelessWidget {
             top: 125,
             child: _circle(
               100,
-              const Color.fromARGB(255, 250, 202, 187).withOpacity(0.35),
+              const Color.fromARGB(255, 250, 202, 187).withValues(alpha:0.35),
             ),
           ),
           Positioned(
@@ -248,7 +246,7 @@ class MePage extends StatelessWidget {
             top: 110,
             child: _circle(
               90,
-              const Color.fromARGB(255, 250, 202, 187).withOpacity(0.35),
+              const Color.fromARGB(255, 250, 202, 187).withValues(alpha:0.35),
             ),
           ),
           SafeArea(

@@ -1,10 +1,7 @@
 import 'dart:async';
-
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math';
-import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -703,10 +700,7 @@ class GrandOpeningContent extends StatelessWidget {
               top: height * 0.16,
               left: width * 0.48,
               height: height * 0.25,
-              child: Container(
-                width: 1,
-                color: Colors.white70,
-              ),
+              child: Container(width: 1, color: Colors.white70),
             ),
 
             // RIGHT: DATE & LOCATION
@@ -1195,8 +1189,8 @@ class BurstBadgeClipper extends CustomClipper<Path> {
     final path = Path();
 
     for (int i = 0; i < points; i++) {
-      final angle = (i * 2 * 3.141592653589793 / points) -
-          3.141592653589793 / 2;
+      final angle =
+          (i * 2 * 3.141592653589793 / points) - 3.141592653589793 / 2;
 
       final currentRadius = i.isEven ? radius : radius * 0.88;
 

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import '../database/database_helper.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -541,13 +542,14 @@ class _CreatePinPageState extends State<CreatePinPage> {
     final birthdayText = widget.birthday == null
         ? null
         : '${widget.birthday!.year.toString().padLeft(4, '0')}-'
-          '${widget.birthday!.month.toString().padLeft(2, '0')}-'
-          '${widget.birthday!.day.toString().padLeft(2, '0')}';
+              '${widget.birthday!.month.toString().padLeft(2, '0')}-'
+              '${widget.birthday!.day.toString().padLeft(2, '0')}';
 
     try {
       // Cek apakah email sudah terdaftar.
-      final existingUser = await DatabaseHelper.instance
-          .getUserByEmail(widget.email.trim());
+      final existingUser = await DatabaseHelper.instance.getUserByEmail(
+        widget.email.trim(),
+      );
 
       if (existingUser != null) {
         if (!mounted) return;
@@ -559,39 +561,35 @@ class _CreatePinPageState extends State<CreatePinPage> {
         return;
       }
 
-     final user = UserModel(
-  nickname: widget.nickname.trim(),
-  email: widget.email.trim(),
-  gender: widget.gender,
-  birthday: birthdayText,
-  pin: pinController.text,
-);
+      final user = UserModel(
+        nickname: widget.nickname.trim(),
+        email: widget.email.trim(),
+        gender: widget.gender,
+        birthday: birthdayText,
+        pin: pinController.text,
+      );
 
-// Simpan akun dan ambil ID dari SQLite
-final insertedId =
-    await DatabaseHelper.instance.insertUser(user);
+      // Simpan akun dan ambil ID dari SQLite
+      final insertedId = await DatabaseHelper.instance.insertUser(user);
 
-// Buat UserModel baru yang sudah memiliki ID
-final registeredUser = UserModel(
-  id: insertedId,
-  nickname: user.nickname,
-  email: user.email,
-  gender: user.gender,
-  birthday: user.birthday,
-  pin: user.pin,
-);
+      // Buat UserModel baru yang sudah memiliki ID
+      final registeredUser = UserModel(
+        id: insertedId,
+        nickname: user.nickname,
+        email: user.email,
+        gender: user.gender,
+        birthday: user.birthday,
+        pin: user.pin,
+      );
 
-if (!mounted) return;
+      if (!mounted) return;
 
-// Kirim UserModel yang sudah memiliki ID
-Navigator.pop(context, registeredUser);
+      // Kirim UserModel yang sudah memiliki ID
+      Navigator.pop(context, registeredUser);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Registrasi gagal: $e'),
-        ),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Registrasi gagal: $e')));
     }
   }
 
@@ -808,17 +806,6 @@ Navigator.pop(context, registeredUser);
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _progressBar() {
-    return Container(
-      width: 85,
-      height: 8,
-      decoration: BoxDecoration(
-        color: orange,
-        borderRadius: BorderRadius.circular(10),
       ),
     );
   }
