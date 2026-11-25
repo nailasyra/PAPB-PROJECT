@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../database/database_helper.dart';
 
 class MyProfilePage extends StatefulWidget {
@@ -108,27 +107,6 @@ class _MyProfilePageState extends State<MyProfilePage> {
     );
   }
 
-  Future<void> _chooseBirthday() async {
-    final initialDate =
-        DateTime.tryParse(widget.user.birthday ?? '') ?? DateTime(2006, 1, 1);
-
-    final selected = await showDatePicker(
-      context: context,
-      initialDate: initialDate,
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-    );
-
-    if (selected != null) {
-      setState(() {
-        birthday =
-            '${selected.day.toString().padLeft(2, '0')}/'
-            '${selected.month.toString().padLeft(2, '0')}/'
-            '${selected.year}';
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -199,22 +177,11 @@ class _MyProfilePageState extends State<MyProfilePage> {
                           ),
                         ),
 
-                        TextButton(
-                          onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  'Fitur Reset PIN akan dibuat berikutnya.',
-                                ),
-                              ),
-                            );
-                          },
-                          child: const Text(
-                            'Reset',
-                            style: TextStyle(
-                              color: Color(0xFF6798CF),
-                              fontSize: 15,
-                            ),
+                        const Text(
+                          'Reset',
+                          style: TextStyle(
+                            color: Color(0xFF6798CF),
+                            fontSize: 15,
                           ),
                         ),
                       ],
@@ -238,13 +205,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
                     // BIRTHDAY
                     _label('Birthday'),
-
-                    InkWell(
-                      onTap: _chooseBirthday,
-                      child: _selectionField(
-                        birthday.isEmpty ? 'Select birthday' : birthday,
-                        color: Colors.grey,
-                      ),
+                    _selectionField(
+                      birthday.isEmpty ? 'Select birthday' : birthday,
+                      color: Colors.grey,
                     ),
                   ],
                 ),
